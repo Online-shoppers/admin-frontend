@@ -1,6 +1,8 @@
 import { ThemeProvider } from '@mui/material';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
+
+import LoadingIndicator from 'components/loading-indicator.component';
 
 import { theme } from 'theme';
 
@@ -11,9 +13,11 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider theme={theme}>
-        <Router>
-          <AppRoutes />
-        </Router>
+        <Suspense fallback={<LoadingIndicator />}>
+          <Router>
+            <AppRoutes />
+          </Router>
+        </Suspense>
       </ThemeProvider>
     </ErrorBoundary>
   );
