@@ -1,6 +1,6 @@
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import LoadingIndicator from 'components/loading-indicator.component';

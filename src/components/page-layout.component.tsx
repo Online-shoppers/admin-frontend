@@ -3,6 +3,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
+import { Grid } from '@mui/material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -90,13 +91,12 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })
     }),
   }),
 );
-const useStyles = makeStyles((theme: Theme) => ({
-  main: {
-    flex: 1,
-    marginTop: theme.spacing(10),
-    marginLeft: theme.spacing(10),
-    marginRight: theme.spacing(5),
-  },
+
+const StyledGrid = styled(Grid, { shouldForwardProp: prop => prop !== 'open' })(({ theme }) => ({
+  flex: 1,
+  marginTop: theme.spacing(10),
+  marginLeft: theme.spacing(10),
+  marginRight: theme.spacing(5),
 }));
 
 interface PageLayoutProps {
@@ -104,7 +104,6 @@ interface PageLayoutProps {
 }
 
 const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
-  const classes = useStyles();
   const theme = useTheme();
   const colors = useTheme().palette;
   const [open, setOpen] = React.useState(false);
@@ -194,7 +193,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
           </List>
         </Drawer>
       </Box>
-      <main className={classes.main}>{children}</main>
+      <StyledGrid>{children}</StyledGrid>
     </React.Fragment>
   );
 };
