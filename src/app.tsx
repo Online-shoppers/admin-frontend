@@ -1,4 +1,5 @@
-import { ThemeProvider } from '@mui/material';
+import { CssBaseline, GlobalStyles } from '@mui/material';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
@@ -12,13 +13,29 @@ import ErrorBoundary from './components/error-boundary.component';
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider theme={theme}>
-        <Suspense fallback={<LoadingIndicator />}>
-          <Router>
-            <AppRoutes />
-          </Router>
-        </Suspense>
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <GlobalStyles
+            styles={{
+              html: { height: '100%' },
+              body: {
+                height: '100%',
+              },
+              '#root': {
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+              },
+            }}
+          />
+          <CssBaseline />
+          <Suspense fallback={<LoadingIndicator />}>
+            <Router>
+              <AppRoutes />
+            </Router>
+          </Suspense>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </ErrorBoundary>
   );
 }
