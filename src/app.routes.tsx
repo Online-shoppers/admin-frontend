@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import AuthRoutes from './app/auth';
-import ProductsRoutes from './app/products';
+import AuthRoutes from './app/auth/routes';
+import ProductsRoutes from './app/products/routes';
 
 interface PublicRouteProps {
   element: React.ReactNode;
