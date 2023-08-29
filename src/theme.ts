@@ -11,6 +11,15 @@ export const theme = createTheme({
     },
   },
   components: {
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          '&:-webkit-autofill': {
+            WebkitBoxShadow: 'inset 0 0 0 50px #3b3b3b !important',
+          },
+        },
+      },
+    },
     MuiTypography: {
       styleOverrides: {
         root: {},
