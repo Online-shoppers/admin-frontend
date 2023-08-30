@@ -45,6 +45,7 @@ const ProductsPage = () => {
       renderCell: params => {
         const [tooltipOpenMap, setTooltipOpenMap] = useState<{ [key: string]: boolean }>({});
         const [tooltipOpen, setTooltipOpen] = useState(false);
+        const [tooltipTitle, setTooltipTitle] = useState('Copy ID'); // Initialize with "Copy ID"
 
         const toggleTooltip = (itemId: string) => {
           setTooltipOpenMap(prevState => ({
@@ -52,20 +53,22 @@ const ProductsPage = () => {
             [itemId]: !prevState[itemId],
           }));
         };
+
         const handleCopyClick = (idToCopy: string) => {
           copy(idToCopy);
 
-          setTooltipOpen(true);
+          setTooltipTitle('Copied!');
 
           setTimeout(() => {
+            setTooltipTitle('Copy ID');
             setTooltipOpen(false);
-          }, 1000);
+          }, 2000);
         };
 
         return (
           <Box display="flex" maxWidth={'100%'}>
             <Tooltip
-              title="Copy ID"
+              title={tooltipTitle}
               open={tooltipOpenMap[params.row.id] || false}
               onClose={() => toggleTooltip(params.row.id)}
               onOpen={() => toggleTooltip(params.row.id)}
@@ -85,7 +88,7 @@ const ProductsPage = () => {
       flex: 5,
       cellClassName: 'description-column--cell',
     },
-    { field: 'category', flex: 1, headerName: 'Category', cellClassName: 'category-column--cell' },
+    { field: 'category', flex: 2, headerName: 'Category', cellClassName: 'category-column--cell' },
     { field: 'quantity', flex: 1, headerName: 'Quantity', cellClassName: 'quantity-column--cell' },
     { field: 'price', headerName: 'Price', flex: 1, cellClassName: 'price-column--cell' },
     {
@@ -165,7 +168,11 @@ const ProductsPage = () => {
             },
           }}
         >
-          <DataGrid rows={productQuery.data?.items || []} columns={columns} />
+          <DataGrid
+            disableRowSelectionOnClick
+            rows={productQuery.data?.items || []}
+            columns={columns}
+          />
         </Box>
       )}
     </Box>
