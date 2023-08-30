@@ -1,9 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Tooltip, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { DataGrid } from '@mui/x-data-grid';
+import { makeStyles } from '@mui/styles';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import copy from 'clipboard-copy';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getAdminPageProducts } from './api/get-page-products.api';
@@ -11,61 +12,123 @@ import { getAdminPageProducts } from './api/get-page-products.api';
 const PAGE_SIZE = 20;
 const PARAM_PAGE = 'page';
 
+const useStyles = makeStyles(() => ({
+  productButtonContent: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  productButton: {
+    width: '150px',
+    textTransform: 'none',
+  },
+}));
+
 const ProductsPage = () => {
-  const theme = useTheme();
   const colors = useTheme().palette;
-  const { search: urlSearchString, pathname } = useLocation();
+  const { search: urlSearchString } = useLocation();
   const params = new URLSearchParams(urlSearchString);
   const page = Number(params.get(PARAM_PAGE)) || 1;
   const history = useNavigate();
+  const classes = useStyles();
 
   const productQuery = useQuery(['page-product', page], async () => {
     const response = await getAdminPageProducts(page, PAGE_SIZE);
     return response.data;
   });
 
-  const columns = [
-    { field: 'id', flex: 1, headerName: 'ID' },
+  const columns: GridColDef[] = [
+    {
+      field: 'id',
+      flex: 2,
+      headerName: 'ID',
+      renderCell: params => {
+        const [tooltipOpenMap, setTooltipOpenMap] = useState<{ [key: string]: boolean }>({});
+        const [tooltipOpen, setTooltipOpen] = useState(false);
+        const [tooltipTitle, setTooltipTitle] = useState('Copy ID'); // Initialize with "Copy ID"
+
+        const toggleTooltip = (itemId: string) => {
+          setTooltipOpenMap(prevState => ({
+            ...prevState,
+            [itemId]: !prevState[itemId],
+          }));
+        };
+
+        const handleCopyClick = (idToCopy: string) => {
+          copy(idToCopy);
+
+          setTooltipTitle('Copied!');
+
+          setTimeout(() => {
+            setTooltipTitle('Copy ID');
+            setTooltipOpen(false);
+          }, 2000);
+        };
+
+        return (
+          <Box display="flex" maxWidth={'100%'}>
+            <Tooltip
+              title={tooltipTitle}
+              open={tooltipOpenMap[params.row.id] || false}
+              onClose={() => toggleTooltip(params.row.id)}
+              onOpen={() => toggleTooltip(params.row.id)}
+            >
+              <Button variant="outlined" onClick={() => handleCopyClick(params.row.id)}>
+                <div className={classes.productButtonContent}>{params.row.id}</div>
+              </Button>
+            </Tooltip>
+          </Box>
+        );
+      },
+    },
     { field: 'name', headerName: 'Name', flex: 2, cellClassName: 'name-column--cell' },
     {
       field: 'description',
       headerName: 'Description',
-      flex: 4,
+      flex: 5,
       cellClassName: 'description-column--cell',
     },
-    { field: 'category', flex: 3, headerName: 'Category', type: 'number' },
-    { field: 'quantity', flex: 3, headerName: 'quantity', type: 'number' },
-    { field: 'price', headerName: 'Price', flex: 4, type: 'number' },
-    { field: 'accessLevel', headerName: 'Access Level', flex: 1 },
+    { field: 'category', flex: 2, headerName: 'Category', cellClassName: 'category-column--cell' },
+    { field: 'quantity', flex: 1, headerName: 'Quantity', cellClassName: 'quantity-column--cell' },
+    { field: 'price', headerName: 'Price', flex: 1, cellClassName: 'price-column--cell' },
     {
       field: 'to product',
-      headerName: 'To Product',
-      flex: 1,
-      renderCell: (params: any) => {
-        const handleEditClick = () => {
+      headerName: '',
+      flex: 2,
+      renderCell: params => {
+        const handleGoToClick = () => {
           const productId = params.row.id;
           const category = params.row.category;
           history(`/products/${category}/${productId}`);
         };
 
+        const [tooltipOpenMap, setTooltipOpenMap] = useState<{ [key: string]: boolean }>({});
+
+        const toggleTooltip = (itemId: string) => {
+          setTooltipOpenMap(prevState => ({
+            ...prevState,
+            [itemId]: !prevState[itemId],
+          }));
+        };
+
         return (
-          <Box
-            width="60%"
-            m="0 auto"
-            p="5px"
-            display="flex"
-            justifyContent="center"
-            borderRadius="4px"
-          >
-            <Button
-              title="Edit"
-              style={{ backgroundColor: '#f9a825', color: 'white' }}
-              onClick={handleEditClick}
+          <Box m="0 auto">
+            <Tooltip
+              title={`Go to ${params.row.name}`}
+              open={tooltipOpenMap[params.row.id] || false}
+              onClose={() => toggleTooltip(params.row.id)}
+              onOpen={() => toggleTooltip(params.row.id)}
             >
-              {params.row.name}
-            </Button>
+              <Button
+                variant="outlined"
+                className={classes.productButton}
+                onClick={handleGoToClick}
+              >
+                <div className={classes.productButtonContent}>{params.row.name}</div>
+              </Button>
+            </Tooltip>
           </Box>
-        ); // demo styles
+        );
       },
     },
   ];
@@ -102,11 +165,15 @@ const ProductsPage = () => {
               backgroundColor: colors.primary.contrastText,
             },
             '& .MuiCheckbox-root': {
-              color: `${colors.primary.dark} !important`,
+              color: `${colors.primary.dark}`,
             },
           }}
         >
-          <DataGrid checkboxSelection rows={productQuery.data?.items || []} columns={columns} />
+          <DataGrid
+            disableRowSelectionOnClick
+            rows={productQuery.data?.items || []}
+            columns={columns}
+          />
         </Box>
       )}
     </Box>
