@@ -44,7 +44,8 @@ const ProductsPage = () => {
       renderCell: (params: any) => {
         const handleEditClick = () => {
           const productId = params.row.id;
-          history(`/product/${productId}`);
+          const category = params.row.category;
+          history(`/products/${category}/${productId}`);
         };
 
         return (
