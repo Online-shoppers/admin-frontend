@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
 import copy from 'clipboard-copy';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getAdminPageProducts } from './api/get-page-products.api';
@@ -12,7 +12,7 @@ import { getAdminPageProducts } from './api/get-page-products.api';
 const PAGE_SIZE = 20;
 const PARAM_PAGE = 'page';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   productButtonContent: {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
@@ -25,13 +25,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ProductsPage = () => {
-  const theme = useTheme();
   const colors = useTheme().palette;
   const { search: urlSearchString } = useLocation();
   const params = new URLSearchParams(urlSearchString);
   const page = Number(params.get(PARAM_PAGE)) || 1;
   const history = useNavigate();
-  const classes = useStyles(); // Apply styles using useStyles
+  const classes = useStyles();
 
   const productQuery = useQuery(['page-product', page], async () => {
     const response = await getAdminPageProducts(page, PAGE_SIZE);
@@ -87,7 +86,7 @@ const ProductsPage = () => {
       cellClassName: 'description-column--cell',
     },
     { field: 'category', flex: 1, headerName: 'Category', cellClassName: 'category-column--cell' },
-    { field: 'quantity', flex: 1, headerName: 'Quantity', cellClassName: 'quantity-column--cell ' },
+    { field: 'quantity', flex: 1, headerName: 'Quantity', cellClassName: 'quantity-column--cell' },
     { field: 'price', headerName: 'Price', flex: 1, cellClassName: 'price-column--cell' },
     {
       field: 'to product',
