@@ -98,7 +98,8 @@ const ProductsPage = () => {
       renderCell: params => {
         const handleGoToClick = () => {
           const productId = params.row.id;
-          history(`/product/${productId}`);
+          const category = params.row.category;
+          history(`/products/${category}/${productId}`);
         };
 
         const [tooltipOpenMap, setTooltipOpenMap] = useState<{ [key: string]: boolean }>({});
