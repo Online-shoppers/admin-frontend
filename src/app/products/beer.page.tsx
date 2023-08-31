@@ -45,6 +45,7 @@ export const Beer = () => {
     data.quantity = Number(data.quantity);
     data.price = Number(data.price);
     data.volume = Number(data.volume);
+    data.country = String(data.country);
     data.abv = Number(data.abv);
     data.ibu = Number(data.ibu);
 

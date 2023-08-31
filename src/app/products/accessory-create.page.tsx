@@ -9,8 +9,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import { createAccessory } from './api/create-page-products.api';
 import { getProductInfo, updateAccessoryInfo } from './api/get-products.api';
+import { createAccessory } from './api/post-page-products.api';
 import { AccessoryType } from './types/accessory.type';
 
 export const AccessoryCreate = () => {
