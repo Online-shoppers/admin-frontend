@@ -153,12 +153,12 @@ const SignIn = () => {
             disabled={!isValid}
             loading={loading}
           >
-            {t('Do-sign-in')}
+            {t('auth:Do-sign-in')}
           </Button>
           <Typography variant="subtitle1">
             {t("Don't-have-an-account?")}{' '}
             <MuiLink component={RouterLink} to="/auth/sign-up">
-              {t('Do-sign-up')}
+              {t('auth:Do-sign-up')}
             </MuiLink>
           </Typography>
         </Box>

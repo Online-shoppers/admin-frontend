@@ -3,6 +3,9 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
 
+import authEn from './locales/en/auth.json';
+import authRu from './locales/ru/auth.json';
+
 i18n
   .use(Backend)
   .use(LanguageDetector)
@@ -18,8 +21,8 @@ i18n
       escapeValue: false,
     },
     resources: {
-      en: {},
-      ru: {},
+      en: { auth: authEn },
+      ru: { auth: authRu },
     },
     detection: {
       caches: ['cookie'],

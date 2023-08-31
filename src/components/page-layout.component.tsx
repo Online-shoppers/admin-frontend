@@ -1,5 +1,6 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
@@ -20,6 +21,7 @@ import Typography from '@mui/material/Typography';
 import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -104,6 +106,11 @@ interface PageLayoutProps {
 }
 
 const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
+  const navigate = useNavigate();
+
+  const handleProductsClick = () => {
+    navigate('/products');
+  };
   const theme = useTheme();
   const colors = useTheme().palette;
   const [open, setOpen] = React.useState(false);
@@ -144,6 +151,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
           <List>
             <ListItem key="products" disablePadding sx={{ display: 'block' }}>
               <ListItemButton
+                onClick={handleProductsClick}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? 'initial' : 'center',
@@ -157,7 +165,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
                     justifyContent: 'center',
                   }}
                 >
-                  <MailIcon />
+                  <InventoryIcon />
                 </ListItemIcon>
                 <ListItemText primary="Products" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
