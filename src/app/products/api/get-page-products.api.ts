@@ -12,6 +12,6 @@ interface PageAdminProductsResponse {
 
 export const getAdminPageProducts = (page: number, size: number) => {
   return repository.get<PageAdminProductsResponse>('/api/products', {
-    params: { page, size },
+    params: { page, size, includeArchived: true },
   });
 };
