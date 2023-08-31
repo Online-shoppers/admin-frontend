@@ -7,7 +7,7 @@ import { Accessory } from './accessory.page';
 import { Beer } from './beer.page';
 import { Snack } from './snack.page';
 
-const ProductPage = React.lazy(() => import('./products.page'));
+const ProductsPage = React.lazy(() => import('./products.page'));
 
 const ProductsRoutes = () => {
   return (
@@ -19,11 +19,11 @@ const ProductsRoutes = () => {
           </PageLayout>
         }
       >
-        <Route path="/get" element={<ProductPage />} />
+        <Route path="/" element={<ProductsPage />} />
         <Route path="/beer/:productId" element={<Beer />} />
         <Route path="/snacks/:productId" element={<Snack />} />
         <Route path="/accessories/:productId" element={<Accessory />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="./" replace />} />
       </Route>
     </Routes>
   );
