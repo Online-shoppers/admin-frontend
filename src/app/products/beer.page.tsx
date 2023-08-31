@@ -99,7 +99,12 @@ export const Beer = () => {
                     control={control}
                     defaultValue={beerQuery.data.price}
                     render={({ field }) => (
-                      <TextField {...field} label={t('Price')} type="number" />
+                      <TextField
+                        {...field}
+                        label={t('Price')}
+                        type="number"
+                        inputProps={{ min: 0 }}
+                      />
                     )}
                   />
                   <Controller
@@ -113,14 +118,26 @@ export const Beer = () => {
                     control={control}
                     defaultValue={beerQuery.data.quantity}
                     render={({ field }) => (
-                      <TextField {...field} type="number" label={t('Quantity')} />
+                      <TextField
+                        {...field}
+                        type="number"
+                        label={t('Quantity')}
+                        inputProps={{ min: 0 }}
+                      />
                     )}
                   />
                   <Controller
                     name="abv"
                     control={control}
                     defaultValue={beerQuery.data.abv}
-                    render={({ field }) => <TextField {...field} type="number" label={t('Abv')} />}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        type="number"
+                        label={t('Abv')}
+                        inputProps={{ min: 0 }}
+                      />
+                    )}
                   />
                   <Controller
                     name="country"
@@ -136,14 +153,26 @@ export const Beer = () => {
                     control={control}
                     defaultValue={beerQuery.data.volume}
                     render={({ field }) => (
-                      <TextField {...field} type="number" label={t('Volume')} />
+                      <TextField
+                        {...field}
+                        type="number"
+                        label={t('Volume')}
+                        inputProps={{ min: 0 }}
+                      />
                     )}
                   />
                   <Controller
                     name="ibu"
                     control={control}
                     defaultValue={beerQuery.data.ibu}
-                    render={({ field }) => <TextField {...field} type="number" label={t('Ibu')} />}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        type="number"
+                        label={t('Ibu')}
+                        inputProps={{ min: 0 }}
+                      />
+                    )}
                   />
                   <Controller
                     name="image_url"
