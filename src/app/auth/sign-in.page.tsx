@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@mui/lab/LoadingButton';
-import { Alert, FormControl, FormHelperText, Link as MuiLink, Snackbar } from '@mui/material';
+import { Alert, FormControl, FormHelperText, Snackbar } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
@@ -12,7 +12,6 @@ import jwt_decode from 'jwt-decode';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { NavLink as RouterLink } from 'react-router-dom';
 import storage from 'storage/admin';
 
 import { useAppDispatch } from 'store';
@@ -155,12 +154,6 @@ const SignIn = () => {
           >
             {t('auth:Do-sign-in')}
           </Button>
-          <Typography variant="subtitle1">
-            {t("Don't-have-an-account?")}{' '}
-            <MuiLink component={RouterLink} to="/auth/sign-up">
-              {t('auth:Do-sign-up')}
-            </MuiLink>
-          </Typography>
         </Box>
       </Box>
       <Snackbar
