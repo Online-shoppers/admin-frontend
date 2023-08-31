@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import { getProductInfo, updateAccessoryInfo } from './api/get-products.api';
@@ -14,7 +15,7 @@ import { AccessoryType } from './types/accessory.type';
 export const Accessory = () => {
   const { productId } = useParams();
   const queryClient = useQueryClient();
-
+  const { t } = useTranslation('product');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -89,37 +90,43 @@ export const Accessory = () => {
                     name="name"
                     control={control}
                     defaultValue={accessoryQuery.data.name}
-                    render={({ field }) => <TextField {...field} label="Name" />}
+                    render={({ field }) => <TextField {...field} label={t('Name')} />}
                   />
                   <Controller
                     name="price"
                     control={control}
                     defaultValue={accessoryQuery.data.price}
-                    render={({ field }) => <TextField {...field} label="Price" type="number" />}
+                    render={({ field }) => (
+                      <TextField {...field} label={t('Price')} type="number" />
+                    )}
                   />
                   <Controller
                     name="description"
                     control={control}
                     defaultValue={accessoryQuery.data.description}
-                    render={({ field }) => <TextField {...field} label="Description" />}
+                    render={({ field }) => <TextField {...field} label={t('Description')} />}
                   />
                   <Controller
                     name="quantity"
                     control={control}
                     defaultValue={accessoryQuery.data.quantity}
-                    render={({ field }) => <TextField {...field} type="number" label="Quantity" />}
+                    render={({ field }) => (
+                      <TextField {...field} type="number" label={t('Quantity')} />
+                    )}
                   />
                   <Controller
                     name="weight"
                     control={control}
                     defaultValue={accessoryQuery.data.weight}
-                    render={({ field }) => <TextField {...field} type="number" label="Weight" />}
+                    render={({ field }) => (
+                      <TextField {...field} type="number" label={t('Weight')} />
+                    )}
                   />
                   <Controller
                     name="image_url"
                     control={control}
                     defaultValue={accessoryQuery.data.image_url}
-                    render={({ field }) => <TextField {...field} label="Image URL" />}
+                    render={({ field }) => <TextField {...field} label={t('Image')} />}
                   />
                   <Controller
                     name="archived"
@@ -128,25 +135,25 @@ export const Accessory = () => {
                     render={({ field }) => (
                       <FormControlLabel
                         control={<Checkbox checked={field.value} {...field} />}
-                        label="Archived"
+                        label={t('Archived')}
                       />
                     )}
                   />
                   <Button type="submit" variant="contained">
-                    Save Changes
+                    {t('Save-changing')}
                   </Button>
 
                   {saveError && (
                     <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                       <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                        This is a success message!
+                        {t('Error-changing')}
                       </Alert>
                     </Snackbar>
                   )}
                   {saveSuccess && (
                     <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                       <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                        This is a success message!
+                        {t('Success-changing')}
                       </Alert>
                     </Snackbar>
                   )}
