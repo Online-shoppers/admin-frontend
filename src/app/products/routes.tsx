@@ -7,6 +7,7 @@ import { AccessoryCreate } from './accessory-create.page';
 import { Accessory } from './accessory.page';
 import { BeerCreate } from './beer-create.page';
 import { Beer } from './beer.page';
+import { SnackCreate } from './snack-create.page';
 import { Snack } from './snack.page';
 
 const ProductPage = React.lazy(() => import('./products.page'));
@@ -26,7 +27,7 @@ const ProductsRoutes = () => {
         <Route path="/snacks/:productId" element={<Snack />} />
         <Route path="/accessories/:productId" element={<Accessory />} />
         <Route path="/beer/create" element={<BeerCreate />} />
-        <Route path="/snacks/create" element={<Snack />} />
+        <Route path="/snacks/create" element={<SnackCreate />} />
         <Route path="/accessories/create" element={<AccessoryCreate />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

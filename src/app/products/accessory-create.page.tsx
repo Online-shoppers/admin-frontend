@@ -1,4 +1,14 @@
-import { Alert, AlertTitle, Checkbox, FormControlLabel, Snackbar } from '@mui/material';
+import {
+  Alert,
+  AlertTitle,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+  Snackbar,
+} from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -11,6 +21,7 @@ import { useParams } from 'react-router-dom';
 
 import { getProductInfo, updateAccessoryInfo } from './api/get-products.api';
 import { createAccessory } from './api/post-page-products.api';
+import { AccessoryTypes } from './enums/accessory-types.enum';
 import { AccessoryType } from './types/accessory.type';
 
 export const AccessoryCreate = () => {
@@ -77,7 +88,16 @@ export const AccessoryCreate = () => {
                 name="type"
                 control={control}
                 render={({ field }) => (
-                  <TextField {...field} label={t('Type')} inputProps={{ min: 0 }} />
+                  <FormControl>
+                    <InputLabel>{t('Type')}</InputLabel>
+                    <Select {...field} label={t('Type')} inputProps={{ min: 0 }}>
+                      {Object.values(AccessoryTypes).map(AccessoryTypes => (
+                        <MenuItem key={AccessoryTypes} value={AccessoryTypes}>
+                          {AccessoryTypes}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 )}
               />
               <Controller

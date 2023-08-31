@@ -10,5 +10,5 @@ export const createAccessory = (data: AccessoryType) => {
   return repository.post(`/api/accessory`, data);
 };
 export const createSnack = (data: SnackType) => {
-  return repository.post(`/api/snack}`, data);
+  return repository.post(`/api/snacks`, data);
 };
