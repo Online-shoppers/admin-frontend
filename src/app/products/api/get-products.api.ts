@@ -19,5 +19,5 @@ export const updateAccessoryInfo = (id: string, data: AccessoryType) => {
 };
 
 export const updateBeerInfo = (id: string, data: BeerType) => {
-  return repository.put<ProductInfo>(`/api/accessory/${id}`, data);
+  return repository.put<ProductInfo>(`/api/beer/${id}`, data);
 };
