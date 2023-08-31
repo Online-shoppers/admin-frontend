@@ -3,6 +3,7 @@ import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 
 import PageLayout from 'components/page-layout.component';
 
+import { AccessoryCreate } from './accessory-create.page';
 import { Accessory } from './accessory.page';
 import { BeerCreate } from './beer-create.page';
 import { Beer } from './beer.page';
@@ -26,7 +27,7 @@ const ProductsRoutes = () => {
         <Route path="/accessories/:productId" element={<Accessory />} />
         <Route path="/beer/create" element={<BeerCreate />} />
         <Route path="/snacks/create" element={<Snack />} />
-        <Route path="/accessories/create" element={<Accessory />} />
+        <Route path="/accessories/create" element={<AccessoryCreate />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
