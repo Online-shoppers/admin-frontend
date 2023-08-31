@@ -9,17 +9,17 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import { getProductInfo, updateAccessoryInfo } from './api/get-products.api';
-import { AccessoryType } from './types/accessory.type';
+import { getProductInfo, updateBeerInfo } from './api/get-products.api';
+import { BeerType } from './types/beer.type';
 
-export const Accessory = () => {
+export const BeerCreate = () => {
   const { productId } = useParams();
   const queryClient = useQueryClient();
   const { t } = useTranslation('product');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const category = 'accessories';
+  const category = 'beer';
   if (!productId) {
     return (
       <div>
@@ -28,26 +28,28 @@ export const Accessory = () => {
     );
   }
 
-  const accessoryQuery = useQuery<AccessoryType>({
+  const beerQuery = useQuery<BeerType>({
     queryKey: ['product', category, productId],
     queryFn: async () => {
       const response = await getProductInfo(category, productId);
-      return response.data as AccessoryType;
+      return response.data as BeerType;
     },
   });
 
-  const { control, handleSubmit } = useForm<AccessoryType>();
+  const { control, handleSubmit } = useForm<BeerType>();
   const [open, setOpen] = useState(false);
-  const onSubmit = async (data: AccessoryType) => {
+  const onSubmit = async (data: BeerType) => {
     setIsSaving(true);
     setSaveError(false);
     setSaveSuccess(false);
     data.quantity = Number(data.quantity);
     data.price = Number(data.price);
-    data.weight = Number(data.weight);
+    data.volume = Number(data.volume);
+    data.abv = Number(data.abv);
+    data.ibu = Number(data.ibu);
 
     try {
-      const response = await updateAccessoryInfo(productId, data);
+      const response = await updateBeerInfo(productId, data);
       setSaveSuccess(true);
       setIsSaving(false);
     } catch (error) {
@@ -67,9 +69,9 @@ export const Accessory = () => {
 
   return (
     <Box p={3}>
-      {accessoryQuery.isLoading ? (
+      {beerQuery.isLoading ? (
         <Typography>Loading...</Typography>
-      ) : accessoryQuery.isError ? (
+      ) : beerQuery.isError ? (
         <Typography>Error loading data</Typography>
       ) : (
         <Box display="flex" justifyContent="center">
@@ -77,76 +79,82 @@ export const Accessory = () => {
             <Box
               component="img"
               sx={{ height: 400, width: 400, marginRight: 7, marginTop: 3, objectFit: 'contain' }}
-              src={accessoryQuery.data.image_url}
-              alt={accessoryQuery.data.name}
+              src={beerQuery.data.image_url}
+              alt={beerQuery.data.name}
             />
             <Box flex="1" ml={2} display="flex" flexDirection="column">
               <Typography variant="h4" sx={{ paddingBottom: 3 }}>
-                {accessoryQuery.data.name}
+                {beerQuery.data.name}
               </Typography>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Box display="flex" flexDirection="column" gap={2}>
                   <Controller
                     name="name"
                     control={control}
-                    defaultValue={accessoryQuery.data.name}
+                    defaultValue={beerQuery.data.name}
                     render={({ field }) => <TextField {...field} label={t('Name')} />}
                   />
                   <Controller
                     name="price"
                     control={control}
-                    defaultValue={accessoryQuery.data.price}
+                    defaultValue={beerQuery.data.price}
                     render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label={t('Price')}
-                        type="number"
-                        inputProps={{ min: 0 }}
-                      />
+                      <TextField {...field} label={t('Price')} type="number" />
                     )}
                   />
                   <Controller
                     name="description"
                     control={control}
-                    defaultValue={accessoryQuery.data.description}
+                    defaultValue={beerQuery.data.description}
                     render={({ field }) => <TextField {...field} label={t('Description')} />}
                   />
                   <Controller
                     name="quantity"
                     control={control}
-                    defaultValue={accessoryQuery.data.quantity}
+                    defaultValue={beerQuery.data.quantity}
                     render={({ field }) => (
-                      <TextField
-                        {...field}
-                        type="number"
-                        label={t('Quantity')}
-                        inputProps={{ min: 0 }}
-                      />
+                      <TextField {...field} type="number" label={t('Quantity')} />
                     )}
                   />
                   <Controller
-                    name="weight"
+                    name="abv"
                     control={control}
-                    defaultValue={accessoryQuery.data.weight}
+                    defaultValue={beerQuery.data.abv}
+                    render={({ field }) => <TextField {...field} type="number" label={t('Abv')} />}
+                  />
+                  <Controller
+                    name="country"
+                    control={control}
+                    defaultValue={beerQuery.data.country}
                     render={({ field }) => (
-                      <TextField
-                        {...field}
-                        type="number"
-                        label={t('Weight')}
-                        inputProps={{ min: 0 }}
-                      />
+                      <TextField {...field} type="string" label={t('country')} />
                     )}
+                  />
+
+                  <Controller
+                    name="volume"
+                    control={control}
+                    defaultValue={beerQuery.data.volume}
+                    render={({ field }) => (
+                      <TextField {...field} type="number" label={t('Volume')} />
+                    )}
+                  />
+                  <Controller
+                    name="ibu"
+                    control={control}
+                    defaultValue={beerQuery.data.ibu}
+                    render={({ field }) => <TextField {...field} type="number" label={t('Ibu')} />}
                   />
                   <Controller
                     name="image_url"
                     control={control}
-                    defaultValue={accessoryQuery.data.image_url}
+                    defaultValue={beerQuery.data.image_url}
                     render={({ field }) => <TextField {...field} label={t('Image')} />}
                   />
                   <Controller
                     name="archived"
                     control={control}
-                    defaultValue={accessoryQuery.data.archived}
+                    defaultValue={beerQuery.data.archived}
                     render={({ field }) => (
                       <FormControlLabel
                         control={<Checkbox checked={field.value} {...field} />}
