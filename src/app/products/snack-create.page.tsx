@@ -1,5 +1,5 @@
 import * as React from 'react';
 
-export const BeerFormComponent = () => {
+export const SnackCreatePage = () => {
   return <div></div>;
 };
