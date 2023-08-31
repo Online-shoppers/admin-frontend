@@ -45,6 +45,8 @@ export const Beer = () => {
     data.quantity = Number(data.quantity);
     data.price = Number(data.price);
     data.volume = Number(data.volume);
+    data.abv = Number(data.abv);
+    data.ibu = Number(data.ibu);
 
     try {
       const response = await updateBeerInfo(productId, data);
@@ -115,12 +117,33 @@ export const Beer = () => {
                     )}
                   />
                   <Controller
+                    name="abv"
+                    control={control}
+                    defaultValue={beerQuery.data.abv}
+                    render={({ field }) => <TextField {...field} type="number" label={t('Abv')} />}
+                  />
+                  <Controller
+                    name="country"
+                    control={control}
+                    defaultValue={beerQuery.data.country}
+                    render={({ field }) => (
+                      <TextField {...field} type="string" label={t('country')} />
+                    )}
+                  />
+
+                  <Controller
                     name="volume"
                     control={control}
                     defaultValue={beerQuery.data.volume}
                     render={({ field }) => (
                       <TextField {...field} type="number" label={t('Volume')} />
                     )}
+                  />
+                  <Controller
+                    name="ibu"
+                    control={control}
+                    defaultValue={beerQuery.data.ibu}
+                    render={({ field }) => <TextField {...field} type="number" label={t('Ibu')} />}
                   />
                   <Controller
                     name="image_url"
