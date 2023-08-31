@@ -33,7 +33,7 @@ const AppRoutes = () => {
         }
       >
         <Route path="/products/*" element={<ProductsRoutes />} />
-        <Route path="/" element={<Navigate to="/products/get" />} />
+        <Route path="/*" element={<Navigate to="/products" />} />
       </Route>
     </Routes>
   );

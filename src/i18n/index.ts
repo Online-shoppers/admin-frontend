@@ -4,8 +4,10 @@ import Backend from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
 
 import authEn from './locales/en/auth.json';
+import errorsEn from './locales/en/errors.json';
 import productEn from './locales/en/products.json';
 import authRu from './locales/ru/auth.json';
+import errorsRu from './locales/ru/errors.json';
 import productRu from './locales/ru/products.json';
 
 i18n
@@ -23,8 +25,8 @@ i18n
       escapeValue: false,
     },
     resources: {
-      en: { auth: authEn, product: productEn },
-      ru: { auth: authRu, product: productRu },
+      en: { auth: authEn, errors: errorsEn, product: productEn },
+      ru: { auth: authRu, errors: errorsRu, product: productRu },
     },
     detection: {
       caches: ['cookie'],
