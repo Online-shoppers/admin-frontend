@@ -6,7 +6,7 @@ export interface Product {
   updated: number;
   name: string;
   price: number;
-  type: string; // TODO VLAD GAY
+  type: string;
   description: string;
   image_url: string;
   quantity: number;

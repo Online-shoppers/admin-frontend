@@ -1,3 +1,4 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, AlertTitle, Checkbox, FormControlLabel, Snackbar } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -5,14 +6,30 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, Resolver, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import * as Yup from 'yup';
 
 import { getProductInfo, updateBeerInfo } from './api/get-products.api';
 import { BeerType } from './types/beer.type';
 
 export const Beer = () => {
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+    price: Yup.number().min(1, 'Price must be greater than 0').required('Price is required'),
+    description: Yup.string().required('Description is required'),
+    image_url: Yup.string().required('Image url is required'),
+    quantity: Yup.number()
+      .min(1, 'Quantity must be greater than 0')
+      .required('Quantity is required'),
+    abv: Yup.number().min(1, 'Abv must be greater than 0').required('Abv is required'),
+    country: Yup.string().required('Country url is required'),
+    volume: Yup.number().min(1, 'Volume must be greater than 0').required('Volume is required'),
+    ibu: Yup.number().min(1, 'Ibu must be greater than 0').required('Ibu is required'),
+    archived: Yup.boolean(),
+  });
+
   const { productId } = useParams();
   const queryClient = useQueryClient();
   const { t } = useTranslation('product');
@@ -36,7 +53,9 @@ export const Beer = () => {
     },
   });
 
-  const { control, handleSubmit } = useForm<BeerType>();
+  const { control, handleSubmit, formState } = useForm<BeerType>({
+    resolver: yupResolver(validationSchema) as unknown as Resolver<BeerType>,
+  });
   const [open, setOpen] = useState(false);
   const onSubmit = async (data: BeerType) => {
     setIsSaving(true);
@@ -45,7 +64,6 @@ export const Beer = () => {
     data.quantity = Number(data.quantity);
     data.price = Number(data.price);
     data.volume = Number(data.volume);
-    data.country = String(data.country);
     data.abv = Number(data.abv);
     data.ibu = Number(data.ibu);
 
@@ -93,18 +111,27 @@ export const Beer = () => {
                     name="name"
                     control={control}
                     defaultValue={beerQuery.data.name}
-                    render={({ field }) => <TextField {...field} label={t('Name')} />}
+                    render={({ field, fieldState }) => (
+                      <TextField
+                        {...field}
+                        type="string"
+                        label={t('Name')}
+                        error={!!fieldState.error}
+                        helperText={fieldState.error ? fieldState.error.message : ''}
+                      />
+                    )}
                   />
                   <Controller
                     name="price"
                     control={control}
                     defaultValue={beerQuery.data.price}
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <TextField
                         {...field}
                         label={t('Price')}
                         type="number"
-                        inputProps={{ min: 0 }}
+                        error={!!fieldState.error}
+                        helperText={fieldState.error ? fieldState.error.message : ''}
                       />
                     )}
                   />
@@ -112,18 +139,27 @@ export const Beer = () => {
                     name="description"
                     control={control}
                     defaultValue={beerQuery.data.description}
-                    render={({ field }) => <TextField {...field} label={t('Description')} />}
+                    render={({ field, fieldState }) => (
+                      <TextField
+                        {...field}
+                        type="string"
+                        label={t('Description')}
+                        error={!!fieldState.error}
+                        helperText={fieldState.error ? fieldState.error.message : ''}
+                      />
+                    )}
                   />
                   <Controller
                     name="quantity"
                     control={control}
                     defaultValue={beerQuery.data.quantity}
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <TextField
                         {...field}
                         type="number"
                         label={t('Quantity')}
-                        inputProps={{ min: 0 }}
+                        error={!!fieldState.error}
+                        helperText={fieldState.error ? fieldState.error.message : ''}
                       />
                     )}
                   />
@@ -131,12 +167,13 @@ export const Beer = () => {
                     name="abv"
                     control={control}
                     defaultValue={beerQuery.data.abv}
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <TextField
                         {...field}
                         type="number"
                         label={t('Abv')}
-                        inputProps={{ min: 0 }}
+                        error={!!fieldState.error}
+                        helperText={fieldState.error ? fieldState.error.message : ''}
                       />
                     )}
                   />
@@ -144,8 +181,14 @@ export const Beer = () => {
                     name="country"
                     control={control}
                     defaultValue={beerQuery.data.country}
-                    render={({ field }) => (
-                      <TextField {...field} type="string" label={t('country')} />
+                    render={({ field, fieldState }) => (
+                      <TextField
+                        {...field}
+                        type="string"
+                        label={t('country')}
+                        error={!!fieldState.error}
+                        helperText={fieldState.error ? fieldState.error.message : ''}
+                      />
                     )}
                   />
 
@@ -153,12 +196,13 @@ export const Beer = () => {
                     name="volume"
                     control={control}
                     defaultValue={beerQuery.data.volume}
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <TextField
                         {...field}
                         type="number"
                         label={t('Volume')}
-                        inputProps={{ min: 0 }}
+                        error={!!fieldState.error}
+                        helperText={fieldState.error ? fieldState.error.message : ''}
                       />
                     )}
                   />
@@ -166,12 +210,13 @@ export const Beer = () => {
                     name="ibu"
                     control={control}
                     defaultValue={beerQuery.data.ibu}
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <TextField
                         {...field}
                         type="number"
                         label={t('Ibu')}
-                        inputProps={{ min: 0 }}
+                        error={!!fieldState.error}
+                        helperText={fieldState.error ? fieldState.error.message : ''}
                       />
                     )}
                   />
@@ -179,7 +224,15 @@ export const Beer = () => {
                     name="image_url"
                     control={control}
                     defaultValue={beerQuery.data.image_url}
-                    render={({ field }) => <TextField {...field} label={t('Image')} />}
+                    render={({ field, fieldState }) => (
+                      <TextField
+                        {...field}
+                        type="string"
+                        label={t('Image')}
+                        error={!!fieldState.error}
+                        helperText={fieldState.error ? fieldState.error.message : ''}
+                      />
+                    )}
                   />
                   <Controller
                     name="archived"
