@@ -1,0 +1,12 @@
+{
+  "Error-changing": "You cannot change it",
+  "Success-changing": "Product successfully changed",
+  "Quantity": "Quantity",
+  "Name": "Name",
+  "Description": "Description",
+  "Image": "Image URL",
+  "Weight": "Weight",
+  "Save-changing": "Save changes",
+  "Price": "Price",
+  "Archived": "Archived"
+}
