@@ -75,6 +75,10 @@ const SignIn = () => {
       const payload = jwt_decode(data.access_token);
       const session = UserSessionSchema.validateSync(payload);
 
+      if (session.role_type !== 'super-admin') {
+        throw new Error(t("errors:You-don't-have-necessary-permissions"));
+      }
+
       storage.set(ACCESS_TOKEN_KEY, data.access_token);
       storage.set(REFRESH_TOKEN_KEY, data.refresh_token);
       storage.set(EXPIRATION_DATE_KEY, session.exp);
@@ -83,11 +87,12 @@ const SignIn = () => {
     } catch (err) {
       console.error(err);
 
+      setAlertOpen(true);
       if (isAxiosError<DefaultError>(err)) {
-        setAlertOpen(true);
         setAlertText(err.response?.data.message || err.message);
+      } else if (err instanceof Error) {
+        setAlertText(err.message);
       } else {
-        setAlertOpen(true);
         setAlertText(t('errors:Something-went-wrong'));
       }
     } finally {
