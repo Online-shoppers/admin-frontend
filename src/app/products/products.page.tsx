@@ -12,7 +12,6 @@ import { getAdminPageProducts } from './api/get-page-products.api';
 import CreateProductButtons from './components/create-product-button.component';
 
 const PARAM_PAGE = 'page';
-
 const useStyles = makeStyles(() => ({
   productButtonContent: {
     whiteSpace: 'nowrap',
@@ -39,8 +38,7 @@ const ProductsPage = () => {
     return response.data;
   });
 
-  const totalPages = Math.ceil(productQuery.data?.info.total || 0);
-
+  const totalPages = Math.ceil(productQuery.data?.info.total || 100);
   useEffect(() => {
     productQuery.refetch();
   }, []);
