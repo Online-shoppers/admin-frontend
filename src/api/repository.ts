@@ -1,4 +1,5 @@
 import axios, { InternalAxiosRequestConfig } from 'axios';
+import i18n from 'i18n';
 import storage from 'storage/admin';
 
 import { ACCESS_TOKEN_KEY } from 'app/auth/constants';
@@ -15,6 +16,7 @@ repository.interceptors.request.use(
 
     if (accessToken && config?.headers) {
       config.headers.Authorization = `Bearer ${accessToken}`;
+      config.headers['x-lang'] = i18n.language;
     }
 
     return config;

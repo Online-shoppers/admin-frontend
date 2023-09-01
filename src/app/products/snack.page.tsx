@@ -4,76 +4,64 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
+import { DefaultError } from 'errors/default.error';
 import * as React from 'react';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-import * as yup from 'yup';
+import { Navigate, useParams } from 'react-router-dom';
 
-import { getAccessoryInfo, updateSnackInfo } from './api/get-products.api';
+import { getSnackInfo, updateSnackInfo } from './api/get-products.api';
+import { ProductCategories } from './enums/product-categories.enum';
+import { updateSnackSchema } from './schemas/update-snack.schema';
 import { SnackType } from './types/snack.type';
+import { UpdateSnackFormType } from './types/update-snack-form.type';
 
 export const Snack = () => {
   const { productId } = useParams();
-  const { t } = useTranslation('product');
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveError, setSaveError] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
-  const category = 'snacks';
-  if (!productId) {
-    return (
-      <div>
-        <h1>Product information is not available.</h1>
-      </div>
-    );
-  }
 
-  const accessoryQuery = useQuery<SnackType>({
+  const { t } = useTranslation('product');
+
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  const category = ProductCategories.SNACKS;
+
+  const snackQuery = useQuery<SnackType>({
     queryKey: ['product', category, productId],
     queryFn: async () => {
-      const response = await getAccessoryInfo(productId);
+      const response = await getSnackInfo(productId);
       return response.data;
     },
   });
 
-  const schema = yup.object().shape({
-    name: yup.string().required('Name is required'),
-    price: yup.number().min(1, 'Price must be a positive number').required('Price is required'),
-    description: yup.string().required('Description is required'),
-    quantity: yup.number().min(1, 'Quantity must be at least 1').required('Quantity is required'),
-    weight: yup
-      .number()
-      .min(0.1, 'Weight must be a positive number')
-      .required('Weight is required'),
-    image_url: yup.string().url('Invalid image URL').required('Image URL is required'),
-    archived: yup.boolean().required('Archived is required'),
-  });
-
-  const { control, handleSubmit, formState } = useForm<SnackType>({
-    resolver: yupResolver(schema),
+  const { control, handleSubmit } = useForm<UpdateSnackFormType>({
+    resolver: yupResolver(updateSnackSchema),
   });
 
   const [open, setOpen] = useState(false);
-  const onSubmit = async (data: SnackType) => {
-    setIsSaving(true);
-    setSaveError(false);
+
+  const onSubmit = handleSubmit(async (data: SnackType) => {
+    setIsError(false);
     setSaveSuccess(false);
-    data.quantity = Number(data.quantity);
-    data.price = Number(data.price);
-    data.weight = Number(data.weight);
 
     try {
-      const response = await updateSnackInfo(productId, data);
+      await updateSnackInfo(productId as string, data);
       setSaveSuccess(true);
-      setIsSaving(false);
+      snackQuery.refetch();
     } catch (error) {
-      setSaveError(true);
-      setIsSaving(false);
+      setIsError(true);
+      if (isAxiosError<DefaultError>(error)) {
+        setErrorMessage(error.response?.data.message || t('errors:Something-went-wrong'));
+      } else {
+        setErrorMessage(t('errors:Something-went-wrong'));
+      }
     }
     setOpen(true);
-  };
+  });
 
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -83,143 +71,156 @@ export const Snack = () => {
     setOpen(false);
   };
 
+  if (!productId) {
+    return <Navigate to="/products" />;
+  }
+
   return (
     <Box p={3}>
-      {accessoryQuery.isLoading ? (
+      {snackQuery.isLoading ? (
         <Typography>Loading...</Typography>
-      ) : accessoryQuery.isError ? (
+      ) : snackQuery.isError ? (
         <Typography>Error loading data</Typography>
       ) : (
         <Box display="flex" justifyContent="center">
-          <Box width="80%" p={3} boxShadow={3} display="flex">
+          <Box width="100%" display="flex" gap="1.5rem">
+            <Box flex={3}>
+              <img src={snackQuery.data.image_url} alt={snackQuery.data.name} width="100%" />
+            </Box>
             <Box
-              component="img"
-              sx={{ height: 400, width: 400, marginRight: 7, marginTop: 3, objectFit: 'contain' }}
-              src={accessoryQuery.data.image_url}
-              alt={accessoryQuery.data.name}
-            />
-            <Box flex="1" ml={2} display="flex" flexDirection="column">
-              <Typography variant="h4" sx={{ paddingBottom: 3 }}>
-                {accessoryQuery.data.name}
-              </Typography>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Box display="flex" flexDirection="column" gap={2}>
-                  <Controller
-                    name="name"
-                    control={control}
-                    defaultValue={accessoryQuery.data.name}
-                    render={({ field, fieldState }) => (
-                      <TextField
-                        {...field}
-                        label={t('Name')}
-                        error={fieldState.invalid}
-                        helperText={fieldState.invalid ? fieldState.error?.message : ''}
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="price"
-                    control={control}
-                    defaultValue={accessoryQuery.data.price}
-                    render={({ field, fieldState }) => (
-                      <TextField
-                        {...field}
-                        label={t('Price')}
-                        type="number"
-                        inputProps={{ min: 0 }}
-                        error={fieldState.invalid}
-                        helperText={fieldState.invalid ? fieldState.error?.message : ''}
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="description"
-                    control={control}
-                    defaultValue={accessoryQuery.data.description}
-                    render={({ field, fieldState }) => (
-                      <TextField
-                        {...field}
-                        label={t('Description')}
-                        error={fieldState.invalid}
-                        helperText={fieldState.invalid ? fieldState.error?.message : ''}
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="quantity"
-                    control={control}
-                    defaultValue={accessoryQuery.data.quantity}
-                    render={({ field, fieldState }) => (
-                      <TextField
-                        {...field}
-                        type="number"
-                        label={t('Quantity')}
-                        inputProps={{ min: 0 }}
-                        error={fieldState.invalid}
-                        helperText={fieldState.invalid ? fieldState.error?.message : ''}
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="weight"
-                    control={control}
-                    defaultValue={accessoryQuery.data.weight}
-                    render={({ field, fieldState }) => (
-                      <TextField
-                        {...field}
-                        type="number"
-                        label={t('Weight')}
-                        inputProps={{ min: 0 }}
-                        error={fieldState.invalid}
-                        helperText={fieldState.invalid ? fieldState.error?.message : ''}
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="image_url"
-                    control={control}
-                    defaultValue={accessoryQuery.data.image_url}
-                    render={({ field, fieldState }) => (
-                      <TextField
-                        {...field}
-                        label={t('Image')}
-                        error={fieldState.invalid}
-                        helperText={fieldState.invalid ? fieldState.error?.message : ''}
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="archived"
-                    control={control}
-                    defaultValue={accessoryQuery.data.archived}
-                    render={({ field }) => (
-                      <FormControlLabel
-                        control={<Checkbox checked={field.value} {...field} />}
-                        label={t('Archived')}
-                      />
-                    )}
-                  />
-                  <Button type="submit" variant="contained">
-                    {t('Save-changing')}
-                  </Button>
-
-                  {formState.isSubmitSuccessful && (
-                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                      <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                        {t('Success-changing')}
-                      </Alert>
-                    </Snackbar>
+              component="form"
+              flex={7}
+              ml={2}
+              display="flex"
+              flexDirection="column"
+              onSubmit={onSubmit}
+            >
+              <Box display="flex" flexDirection="column" gap={2}>
+                <Controller
+                  name="name"
+                  control={control}
+                  defaultValue={snackQuery.data.name}
+                  render={({ field, fieldState }) => (
+                    <TextField
+                      {...field}
+                      label={t('Name')}
+                      error={fieldState.invalid}
+                      helperText={fieldState.error ? t(fieldState.error.message) : ''}
+                    />
                   )}
-
-                  {formState.isSubmitSuccessful === false && (
-                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                      <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                        {t('Error-changing')}
-                      </Alert>
-                    </Snackbar>
+                />
+                <Controller
+                  name="price"
+                  control={control}
+                  defaultValue={snackQuery.data.price}
+                  render={({ field, fieldState }) => (
+                    <TextField
+                      {...field}
+                      label={t('Price')}
+                      type="number"
+                      inputProps={{ min: 0 }}
+                      error={fieldState.invalid}
+                      helperText={fieldState.error ? t(fieldState.error.message) : ''}
+                    />
                   )}
-                </Box>
-              </form>
+                />
+                <Controller
+                  name="description"
+                  control={control}
+                  defaultValue={snackQuery.data.description}
+                  render={({ field, fieldState }) => (
+                    <TextField
+                      {...field}
+                      label={t('Description')}
+                      error={fieldState.invalid}
+                      helperText={fieldState.error ? t(fieldState.error.message) : ''}
+                    />
+                  )}
+                />
+                <Controller
+                  name="quantity"
+                  control={control}
+                  defaultValue={snackQuery.data.quantity}
+                  render={({ field, fieldState }) => (
+                    <TextField
+                      {...field}
+                      type="number"
+                      label={t('Quantity')}
+                      inputProps={{ min: 0 }}
+                      error={fieldState.invalid}
+                      helperText={fieldState.error ? t(fieldState.error.message) : ''}
+                    />
+                  )}
+                />
+                <Controller
+                  name="weight"
+                  control={control}
+                  defaultValue={snackQuery.data.weight}
+                  render={({ field, fieldState }) => (
+                    <TextField
+                      {...field}
+                      type="number"
+                      label={t('Weight')}
+                      inputProps={{ min: 0 }}
+                      error={fieldState.invalid}
+                      helperText={fieldState.error ? t(fieldState.error.message) : ''}
+                    />
+                  )}
+                />
+                <Controller
+                  name="image_url"
+                  control={control}
+                  defaultValue={snackQuery.data.image_url}
+                  render={({ field, fieldState }) => (
+                    <TextField
+                      {...field}
+                      label={t('Image')}
+                      error={fieldState.invalid}
+                      helperText={fieldState.error ? t(fieldState.error.message) : ''}
+                    />
+                  )}
+                />
+                <Controller
+                  name="archived"
+                  control={control}
+                  defaultValue={snackQuery.data.archived}
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={<Checkbox checked={field.value} {...field} />}
+                      label={t('Archived')}
+                    />
+                  )}
+                />
+                <Button type="submit" variant="contained">
+                  {t('Save-changing')}
+                </Button>
+
+                {saveSuccess && (
+                  <Snackbar
+                    open={open}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                  >
+                    <Alert onClose={handleClose} severity="success" variant="filled">
+                      {t('Success-changing')}
+                    </Alert>
+                  </Snackbar>
+                )}
+
+                {isError && (
+                  <Snackbar
+                    open={open}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                  >
+                    <Alert onClose={handleClose} severity="error" variant="filled">
+                      {errorMessage}
+                    </Alert>
+                  </Snackbar>
+                )}
+              </Box>
             </Box>
           </Box>
         </Box>

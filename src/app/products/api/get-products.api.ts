@@ -11,7 +11,7 @@ export const getBeerInfo = (id?: string) => {
 };
 
 export const getSnackInfo = (id?: string) => {
-  return repository.get<SnackType>(`/api/snack/${id}`, {
+  return repository.get<SnackType>(`/api/snacks/${id}`, {
     params: { id },
   });
 };

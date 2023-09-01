@@ -124,6 +124,7 @@ function App() {
                   // overflow: 'overlay',
                   overflowY: 'scroll !important',
                   width: 'auto',
+                  padding: '0 !important',
 
                   // does not remove cumulative layout shift in safari
                   scrollbarGutter: 'stable',

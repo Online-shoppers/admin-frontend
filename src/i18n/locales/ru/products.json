@@ -25,6 +25,7 @@
     "Country-is-required": "Страна - обязательное поле",
     "Volume-is-required": "Объем - обязательное поле",
     "IBU-is-required": "IBU - обязательное поле",
+    "Weight-is-required": "Вес - обязательное поле",
 
     "Volume-must-be-a-number": "Объем должен быть числом",
     "Quantity-must-be-a-number": "Количество - обязательное поле",

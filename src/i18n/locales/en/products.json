@@ -25,6 +25,7 @@
     "Country-is-required": "Country is required",
     "Volume-is-required": "Volume is required",
     "IBU-is-required": "IBU is required",
+    "Weight-is-required": "Weight is required",
 
     "Volume-must-be-a-number": "Volume must be a number",
     "Quantity-must-be-a-number": "Quantity must be a number",
