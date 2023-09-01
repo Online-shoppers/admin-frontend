@@ -120,7 +120,7 @@ export const AccessoryCreate = () => {
                     <Select {...field} label={t('Type')} inputProps={{ min: 0 }}>
                       {Object.values(AccessoryTypes).map(type => (
                         <MenuItem key={type} value={type}>
-                          {type}
+                          {t(`accessories.${type}`)}
                         </MenuItem>
                       ))}
                     </Select>

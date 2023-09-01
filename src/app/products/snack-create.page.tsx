@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
-  AlertTitle,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -14,25 +13,24 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 import * as yup from 'yup';
 
 import { createSnack } from './api/post-page-products.api';
+import { ProductCategories } from './enums/product-categories.enum';
 import { SnackTypes } from './enums/snack-types.enum';
 import { SnackCreateType } from './types/snack-create.type';
-import { SnackType } from './types/snack.type';
 
 export const SnackCreate = () => {
-  const queryClient = useQueryClient();
   const { t } = useTranslation('product');
+
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const category = 'snacks';
+
+  const category = ProductCategories.SNACKS;
 
   const schema = yup.object().shape({
     name: yup.string().required('Name is required'),
@@ -85,7 +83,7 @@ export const SnackCreate = () => {
       <Box width="80%" p={3} boxShadow={3} display="flex">
         <Box flex="1" ml={2} display="flex" flexDirection="column">
           <Typography variant="h4" sx={{ paddingBottom: 3 }}>
-            Create Snack
+            {t('Create-snack')}
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box display="flex" flexDirection="column" gap={2}>
@@ -124,7 +122,7 @@ export const SnackCreate = () => {
                     <Select {...field} label={t('Type')} inputProps={{ min: 0 }}>
                       {Object.values(SnackTypes).map(type => (
                         <MenuItem key={type} value={type}>
-                          {type}
+                          {t(`snacks.${type}`)}
                         </MenuItem>
                       ))}
                     </Select>
