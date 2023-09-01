@@ -8,5 +8,15 @@
   "Weight": "Вес",
   "Save-changing": "Сохранить изменения",
   "Price": "Цена",
-  "Archived": "Архивировать"
+  "Archived": "Архивировать",
+
+  "Name-required": "Заполните имя",
+  "ImageUrl-required": "Заполните ссылку",
+  "Description-required": "Заполните описание",
+  "Price-min": "Введите коректную цену",
+  "Price-required": "Заполните цену",
+  "Quantity-min": "Введите корректное количество",
+  "Quantity-required": "Заполните количество",
+  "Weight-min": "Введите корректный вес",
+  "Weight-required": "Заполните вес"
 }

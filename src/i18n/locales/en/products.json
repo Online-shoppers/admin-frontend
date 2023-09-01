@@ -8,5 +8,14 @@
   "Weight": "Weight",
   "Save-changing": "Save changes",
   "Price": "Price",
-  "Archived": "Archived"
+  "Archived": "Archived",
+  "Name-required": "Name is required",
+  "ImageUrl-required": "ImageUrl is required",
+  "Description-required": "Description is required",
+  "Price-min": "Price value is not correct",
+  "Price-required": "Price is required",
+  "Quantity-min": "Quantity value is not correct",
+  "Quantity-required": "Quantity is required",
+  "Weight-min": "Weight value is not correct",
+  "Weight-required": "Weight is required"
 }
