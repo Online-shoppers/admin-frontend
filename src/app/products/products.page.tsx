@@ -24,11 +24,6 @@ const useStyles = makeStyles(() => ({
     textTransform: 'none',
     margin: '5px',
   },
-  pagination: {
-    '& > .MuiPagination-ul': {
-      justifyContent: 'center',
-    },
-  },
 }));
 
 const ProductsPage = () => {
