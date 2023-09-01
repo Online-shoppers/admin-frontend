@@ -24,7 +24,7 @@ export const Beer = () => {
       .min(1, 'Quantity must be greater than 0')
       .required('Quantity is required'),
     abv: Yup.number().min(1, 'Abv must be greater than 0').required('Abv is required'),
-    country: Yup.string().required('Country url is required'),
+    country: Yup.string().required('Country is required'),
     volume: Yup.number().min(1, 'Volume must be greater than 0').required('Volume is required'),
     ibu: Yup.number().min(1, 'Ibu must be greater than 0').required('Ibu is required'),
     archived: Yup.boolean(),

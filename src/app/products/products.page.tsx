@@ -5,6 +5,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
 import copy from 'clipboard-copy';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getAdminPageProducts } from './api/get-page-products.api';
@@ -38,7 +39,9 @@ const ProductsPage = () => {
     const response = await getAdminPageProducts(page, PAGE_SIZE);
     return response.data;
   });
-
+  useEffect(() => {
+    productQuery.refetch();
+  }, []);
   const columns: GridColDef[] = [
     {
       field: 'id',

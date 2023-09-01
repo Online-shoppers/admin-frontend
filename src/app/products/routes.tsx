@@ -27,11 +27,11 @@ const ProductsRoutes = () => {
         <Route path="/snacks/:productId" element={<Snack />} />
         <Route path="/accessories/:productId" element={<Accessory />} />
 
-        {/*<Route path="*" element={<Navigate to="./" replace />} />*/}
-        {/*<Route path="/beer/create" element={<BeerCreate />} />*/}
-        {/*<Route path="/snacks/create" element={<SnackCreate />} />*/}
-        {/*<Route path="/accessories/create" element={<AccessoryCreate />} />*/}
-        {/*<Route path="*" element={<Navigate to="/" replace />} />*/}
+        <Route path="*" element={<Navigate to="./" replace />} />
+        <Route path="/beer/create" element={<BeerCreate />} />
+        <Route path="/snacks/create" element={<SnackCreate />} />
+        <Route path="/accessories/create" element={<AccessoryCreate />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
   );
