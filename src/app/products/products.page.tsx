@@ -1,10 +1,10 @@
-import { Box, Button, Pagination, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Tooltip, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
 import copy from 'clipboard-copy';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getAdminPageProducts } from './api/get-page-products.api';
@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
 
 const ProductsPage = () => {
   const colors = useTheme().palette;
-  const { search: urlSearchString, pathname } = useLocation();
+  const { search: urlSearchString } = useLocation();
   const params = new URLSearchParams(urlSearchString);
   const page = Number(params.get(PARAM_PAGE)) || 1;
   const history = useNavigate();
