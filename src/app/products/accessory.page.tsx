@@ -39,16 +39,13 @@ export const Accessory = () => {
   });
 
   const schema = yup.object().shape({
-    name: yup.string().required('Name is required'),
-    price: yup.number().min(1, 'Price must be a positive number').required('Price is required'),
-    description: yup.string().required('Description is required'),
-    quantity: yup.number().min(1, 'Quantity must be at least 1').required('Quantity is required'),
-    weight: yup
-      .number()
-      .min(0.1, 'Weight must be a positive number')
-      .required('Weight is required'),
-    image_url: yup.string().url('Invalid image URL').required('Image URL is required'),
-    archived: yup.boolean().required('Archived is required'),
+    name: yup.string().required(t('Name-required')),
+    price: yup.number().min(1, t('Price-min')).required(t('Price-required')),
+    description: yup.string().required(t('Description-required')),
+    quantity: yup.number().min(1, t('Quantity-min')).required(t('Quantity-required')),
+    weight: yup.number().min(0.1, t('Weight-min')).required(t('Weight-required')),
+    image_url: yup.string().url(t('ImageURL-invalid')).required(t('ImageURL-required')),
+    archived: yup.boolean().required(t('Archived-required')),
   });
 
   const { control, handleSubmit, formState } = useForm<AccessoryType>({
@@ -86,9 +83,9 @@ export const Accessory = () => {
   return (
     <Box p={3}>
       {accessoryQuery.isLoading ? (
-        <Typography>Loading...</Typography>
+        <Typography>{t('Loading')}</Typography>
       ) : accessoryQuery.isError ? (
-        <Typography>Error loading data</Typography>
+        <Typography>{t('Error-loading')}</Typography>
       ) : (
         <Box display="flex" justifyContent="center">
           <Box width="80%" p={3} boxShadow={3} display="flex">
