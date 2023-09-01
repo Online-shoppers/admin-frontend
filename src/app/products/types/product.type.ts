@@ -6,6 +6,7 @@ export interface Product {
   updated: number;
   name: string;
   price: number;
+  type: string;
   description: string;
   image_url: string;
   quantity: number;

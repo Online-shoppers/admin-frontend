@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getAdminPageProducts } from './api/get-page-products.api';
+import CreateProductButtons from './components/create-product-button.component';
 
 const PAGE_SIZE = 20;
 const PARAM_PAGE = 'page';
@@ -21,6 +22,7 @@ const useStyles = makeStyles(() => ({
   productButton: {
     width: '150px',
     textTransform: 'none',
+    margin: '5px',
   },
 }));
 
@@ -62,7 +64,7 @@ const ProductsPage = () => {
           setTimeout(() => {
             setTooltipTitle('Copy ID');
             setTooltipOpen(false);
-          }, 2000);
+          }, 5000);
         };
 
         return (
@@ -142,7 +144,7 @@ const ProductsPage = () => {
       ) : (
         <Box
           m="40px 0 0 0"
-          height="75vh"
+          height="fit-content"
           sx={{
             '& .MuiDataGrid-root': {
               border: 'none',
@@ -169,6 +171,7 @@ const ProductsPage = () => {
             },
           }}
         >
+          <CreateProductButtons />
           <DataGrid
             disableRowSelectionOnClick
             rows={productQuery.data?.items || []}
