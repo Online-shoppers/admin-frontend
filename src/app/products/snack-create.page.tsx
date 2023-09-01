@@ -1,3 +1,4 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
   AlertTitle,
@@ -18,9 +19,11 @@ import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import * as yup from 'yup';
 
 import { createSnack } from './api/post-page-products.api';
 import { SnackTypes } from './enums/snack-types.enum';
+import { SnackCreateType } from './types/snack-create.type';
 import { SnackType } from './types/snack.type';
 
 export const SnackCreate = () => {
@@ -31,10 +34,24 @@ export const SnackCreate = () => {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const category = 'snacks';
 
-  const { control, handleSubmit } = useForm<SnackType>();
+  const schema = yup.object().shape({
+    name: yup.string().required('Name is required'),
+    price: yup.number().min(0, 'Price must be a positive number').required('Price is required'),
+    type: yup.string().required('Type is required'),
+    description: yup.string().required('Description is required'),
+    quantity: yup.number().min(1, 'Quantity must be at least 1').required('Quantity is required'),
+    weight: yup.number().min(0, 'Weight must be a positive number').required('Weight is required'),
+    image_url: yup.string().url('Invalid image URL').required('Image URL is required'),
+    archived: yup.boolean().required('Archived is required'),
+  });
+
+  const { control, handleSubmit, formState } = useForm<SnackCreateType>({
+    resolver: yupResolver(schema),
+  });
+
   const [open, setOpen] = useState(false);
   const [archived, setArchived] = useState(false);
-  const onSubmit = async (data: SnackType) => {
+  const onSubmit = async (data: SnackCreateType) => {
     console.log(data);
     setIsSaving(true);
     setSaveError(false);
@@ -47,6 +64,7 @@ export const SnackCreate = () => {
       const response = await createSnack(data);
       setSaveSuccess(true);
       setIsSaving(false);
+      window.location.reload();
     } catch (error) {
       setSaveError(true);
       setIsSaving(false);
@@ -74,25 +92,39 @@ export const SnackCreate = () => {
               <Controller
                 name="name"
                 control={control}
-                render={({ field }) => <TextField {...field} label={t('Name')} />}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label={t('Name')}
+                    error={fieldState.invalid}
+                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                  />
+                )}
               />
               <Controller
                 name="price"
                 control={control}
-                render={({ field }) => (
-                  <TextField {...field} label={t('Price')} type="number" inputProps={{ min: 0 }} />
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label={t('Price')}
+                    type="number"
+                    inputProps={{ min: 0 }}
+                    error={fieldState.invalid}
+                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                  />
                 )}
               />
               <Controller
                 name="type"
                 control={control}
-                render={({ field }) => (
-                  <FormControl>
+                render={({ field, fieldState }) => (
+                  <FormControl error={fieldState.invalid}>
                     <InputLabel>{t('Type')}</InputLabel>
                     <Select {...field} label={t('Type')} inputProps={{ min: 0 }}>
-                      {Object.values(SnackTypes).map(SnackTypes => (
-                        <MenuItem key={SnackTypes} value={SnackTypes}>
-                          {SnackTypes}
+                      {Object.values(SnackTypes).map(type => (
+                        <MenuItem key={type} value={type}>
+                          {type}
                         </MenuItem>
                       ))}
                     </Select>
@@ -102,31 +134,54 @@ export const SnackCreate = () => {
               <Controller
                 name="description"
                 control={control}
-                render={({ field }) => <TextField {...field} label={t('Description')} />}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label={t('Description')}
+                    error={fieldState.invalid}
+                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                  />
+                )}
               />
               <Controller
                 name="quantity"
                 control={control}
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <TextField
                     {...field}
                     type="number"
                     label={t('Quantity')}
                     inputProps={{ min: 0 }}
+                    error={fieldState.invalid}
+                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
                   />
                 )}
               />
               <Controller
                 name="weight"
                 control={control}
-                render={({ field }) => (
-                  <TextField {...field} type="number" label={t('Weight')} inputProps={{ min: 0 }} />
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    type="number"
+                    label={t('Weight')}
+                    inputProps={{ min: 0 }}
+                    error={fieldState.invalid}
+                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                  />
                 )}
               />
               <Controller
                 name="image_url"
                 control={control}
-                render={({ field }) => <TextField {...field} label={t('Image')} />}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label={t('Image')}
+                    error={fieldState.invalid}
+                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                  />
+                )}
               />
               <Controller
                 name="archived"
@@ -139,7 +194,7 @@ export const SnackCreate = () => {
                   />
                 )}
               />
-              <Button type="submit" variant="contained">
+              <Button type="submit" variant="contained" disabled={formState.isSubmitting}>
                 {t('Save-changing')}
               </Button>
 

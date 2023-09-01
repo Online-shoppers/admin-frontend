@@ -32,5 +32,15 @@
     "ABV-must-be-a-number": "ABV must be a number",
 
     "URL-must-be-a-link": "URL must be a link"
-  }
+  },
+
+  "Name-required": "Name is required",
+  "ImageUrl-required": "ImageUrl is required",
+  "Description-required": "Description is required",
+  "Price-min": "Price value is not correct",
+  "Price-required": "Price is required",
+  "Quantity-min": "Quantity value is not correct",
+  "Quantity-required": "Quantity is required",
+  "Weight-min": "Weight value is not correct",
+  "Weight-required": "Weight is required"
 }

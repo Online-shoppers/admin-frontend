@@ -32,5 +32,15 @@
     "ABV-must-be-a-number": "ABV должно быть числом",
 
     "URL-must-be-a-link": "URL должен быть ссылкой"
-  }
+  },
+
+  "Name-required": "Заполните имя",
+  "ImageUrl-required": "Заполните ссылку",
+  "Description-required": "Заполните описание",
+  "Price-min": "Введите коректную цену",
+  "Price-required": "Заполните цену",
+  "Quantity-min": "Введите корректное количество",
+  "Quantity-required": "Заполните количество",
+  "Weight-min": "Введите корректный вес",
+  "Weight-required": "Заполните вес"
 }

@@ -1,4 +1,5 @@
-import { Alert, Checkbox, FormControlLabel, Snackbar } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Alert, AlertTitle, Checkbox, FormControlLabel, Snackbar } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -8,6 +9,7 @@ import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import * as yup from 'yup';
 
 import { getAccessoryInfo, updateAccessoryInfo } from './api/get-products.api';
 import { AccessoryType } from './types/accessory.type';
@@ -35,7 +37,23 @@ export const Accessory = () => {
     },
   });
 
-  const { control, handleSubmit } = useForm<AccessoryType>();
+  const schema = yup.object().shape({
+    name: yup.string().required('Name is required'),
+    price: yup.number().min(1, 'Price must be a positive number').required('Price is required'),
+    description: yup.string().required('Description is required'),
+    quantity: yup.number().min(1, 'Quantity must be at least 1').required('Quantity is required'),
+    weight: yup
+      .number()
+      .min(0.1, 'Weight must be a positive number')
+      .required('Weight is required'),
+    image_url: yup.string().url('Invalid image URL').required('Image URL is required'),
+    archived: yup.boolean().required('Archived is required'),
+  });
+
+  const { control, handleSubmit, formState } = useForm<AccessoryType>({
+    resolver: yupResolver(schema),
+  });
+
   const [open, setOpen] = useState(false);
   const onSubmit = async (data: AccessoryType) => {
     setIsSaving(true);
@@ -89,18 +107,27 @@ export const Accessory = () => {
                     name="name"
                     control={control}
                     defaultValue={accessoryQuery.data.name}
-                    render={({ field }) => <TextField {...field} label={t('Name')} />}
+                    render={({ field, fieldState }) => (
+                      <TextField
+                        {...field}
+                        label={t('Name')}
+                        error={fieldState.invalid}
+                        helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                      />
+                    )}
                   />
                   <Controller
                     name="price"
                     control={control}
                     defaultValue={accessoryQuery.data.price}
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <TextField
                         {...field}
                         label={t('Price')}
                         type="number"
                         inputProps={{ min: 0 }}
+                        error={fieldState.invalid}
+                        helperText={fieldState.invalid ? fieldState.error?.message : ''}
                       />
                     )}
                   />
@@ -108,18 +135,27 @@ export const Accessory = () => {
                     name="description"
                     control={control}
                     defaultValue={accessoryQuery.data.description}
-                    render={({ field }) => <TextField {...field} label={t('Description')} />}
+                    render={({ field, fieldState }) => (
+                      <TextField
+                        {...field}
+                        label={t('Description')}
+                        error={fieldState.invalid}
+                        helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                      />
+                    )}
                   />
                   <Controller
                     name="quantity"
                     control={control}
                     defaultValue={accessoryQuery.data.quantity}
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <TextField
                         {...field}
                         type="number"
                         label={t('Quantity')}
                         inputProps={{ min: 0 }}
+                        error={fieldState.invalid}
+                        helperText={fieldState.invalid ? fieldState.error?.message : ''}
                       />
                     )}
                   />
@@ -127,12 +163,14 @@ export const Accessory = () => {
                     name="weight"
                     control={control}
                     defaultValue={accessoryQuery.data.weight}
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <TextField
                         {...field}
                         type="number"
                         label={t('Weight')}
                         inputProps={{ min: 0 }}
+                        error={fieldState.invalid}
+                        helperText={fieldState.invalid ? fieldState.error?.message : ''}
                       />
                     )}
                   />
@@ -140,7 +178,14 @@ export const Accessory = () => {
                     name="image_url"
                     control={control}
                     defaultValue={accessoryQuery.data.image_url}
-                    render={({ field }) => <TextField {...field} label={t('Image')} />}
+                    render={({ field, fieldState }) => (
+                      <TextField
+                        {...field}
+                        label={t('Image')}
+                        error={fieldState.invalid}
+                        helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                      />
+                    )}
                   />
                   <Controller
                     name="archived"
@@ -157,17 +202,18 @@ export const Accessory = () => {
                     {t('Save-changing')}
                   </Button>
 
-                  {saveError && (
-                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                      <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                        {t('Error-changing')}
-                      </Alert>
-                    </Snackbar>
-                  )}
-                  {saveSuccess && (
+                  {formState.isSubmitSuccessful && (
                     <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                       <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
                         {t('Success-changing')}
+                      </Alert>
+                    </Snackbar>
+                  )}
+
+                  {formState.isSubmitSuccessful === false && (
+                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                      <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                        {t('Error-changing')}
                       </Alert>
                     </Snackbar>
                   )}
