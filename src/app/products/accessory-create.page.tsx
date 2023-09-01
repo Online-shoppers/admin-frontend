@@ -1,6 +1,6 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
-  AlertTitle,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -13,33 +13,45 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import * as yup from 'yup';
 
-import { getProductInfo, updateAccessoryInfo } from './api/get-products.api';
 import { createAccessory } from './api/post-page-products.api';
 import { AccessoryTypes } from './enums/accessory-types.enum';
+import { AccessoryCreateType } from './types/accessory-create.type';
 import { AccessoryType } from './types/accessory.type';
 
 export const AccessoryCreate = () => {
-  const queryClient = useQueryClient();
   const { t } = useTranslation('product');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const category = 'accessories';
 
-  const { control, handleSubmit } = useForm<AccessoryType>();
+  const schema = yup.object().shape({
+    name: yup.string().required(t('Name-required')),
+    price: yup.number().min(1, t('Price-min')).required(t('Price-required')),
+    type: yup.string().required(t('Type-required')),
+    description: yup.string().required(t('Description-required')),
+    quantity: yup.number().min(1, t('Quantity-min')).required(t('Quantity-required')),
+    weight: yup.number().min(0.1, t('Weight-min')).required(t('Weight-required')),
+    image_url: yup.string().url(t('ImageURL-invalid')).required(t('ImageURL-required')),
+    archived: yup.boolean().required(t('Archived-required')),
+  });
+
+  const { control, handleSubmit, formState } = useForm<AccessoryCreateType>({
+    resolver: yupResolver(schema),
+  });
+
   const [open, setOpen] = useState(false);
-  const [archived, setArchived] = useState(false);
-  const onSubmit = async (data: AccessoryType) => {
-    console.log(data);
+
+  const onSubmit = async (data: AccessoryCreateType) => {
     setIsSaving(true);
     setSaveError(false);
     setSaveSuccess(false);
+
     data.quantity = Number(data.quantity);
     data.price = Number(data.price);
     data.weight = Number(data.weight);
@@ -48,6 +60,7 @@ export const AccessoryCreate = () => {
       const response = await createAccessory(data);
       setSaveSuccess(true);
       setIsSaving(false);
+      window.location.reload();
     } catch (error) {
       setSaveError(true);
       setIsSaving(false);
@@ -68,32 +81,46 @@ export const AccessoryCreate = () => {
       <Box width="80%" p={3} boxShadow={3} display="flex">
         <Box flex="1" ml={2} display="flex" flexDirection="column">
           <Typography variant="h4" sx={{ paddingBottom: 3 }}>
-            Create Accessory
+            {t('Create-accessory')}
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box display="flex" flexDirection="column" gap={2}>
               <Controller
                 name="name"
                 control={control}
-                render={({ field }) => <TextField {...field} label={t('Name')} />}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label={t('Name')}
+                    error={fieldState.invalid}
+                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                  />
+                )}
               />
               <Controller
                 name="price"
                 control={control}
-                render={({ field }) => (
-                  <TextField {...field} label={t('Price')} type="number" inputProps={{ min: 0 }} />
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label={t('Price')}
+                    type="number"
+                    inputProps={{ min: 0 }}
+                    error={fieldState.invalid}
+                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                  />
                 )}
               />
               <Controller
                 name="type"
                 control={control}
-                render={({ field }) => (
-                  <FormControl>
+                render={({ field, fieldState }) => (
+                  <FormControl error={fieldState.invalid}>
                     <InputLabel>{t('Type')}</InputLabel>
                     <Select {...field} label={t('Type')} inputProps={{ min: 0 }}>
-                      {Object.values(AccessoryTypes).map(AccessoryTypes => (
-                        <MenuItem key={AccessoryTypes} value={AccessoryTypes}>
-                          {AccessoryTypes}
+                      {Object.values(AccessoryTypes).map(type => (
+                        <MenuItem key={type} value={type}>
+                          {t(`accessories.${type}`)}
                         </MenuItem>
                       ))}
                     </Select>
@@ -103,31 +130,54 @@ export const AccessoryCreate = () => {
               <Controller
                 name="description"
                 control={control}
-                render={({ field }) => <TextField {...field} label={t('Description')} />}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label={t('Description')}
+                    error={fieldState.invalid}
+                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                  />
+                )}
               />
               <Controller
                 name="quantity"
                 control={control}
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <TextField
                     {...field}
                     type="number"
                     label={t('Quantity')}
                     inputProps={{ min: 0 }}
+                    error={fieldState.invalid}
+                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
                   />
                 )}
               />
               <Controller
                 name="weight"
                 control={control}
-                render={({ field }) => (
-                  <TextField {...field} type="number" label={t('Weight')} inputProps={{ min: 0 }} />
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    type="number"
+                    label={t('Weight')}
+                    inputProps={{ min: 0 }}
+                    error={fieldState.invalid}
+                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                  />
                 )}
               />
               <Controller
                 name="image_url"
                 control={control}
-                render={({ field }) => <TextField {...field} label={t('Image')} />}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label={t('Image')}
+                    error={fieldState.invalid}
+                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                  />
+                )}
               />
               <Controller
                 name="archived"
@@ -144,17 +194,18 @@ export const AccessoryCreate = () => {
                 {t('Save-changing')}
               </Button>
 
-              {saveError && (
-                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                  <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                    {t('Error-changing')}
-                  </Alert>
-                </Snackbar>
-              )}
-              {saveSuccess && (
+              {formState.isSubmitSuccessful && (
                 <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                   <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
                     {t('Success-changing')}
+                  </Alert>
+                </Snackbar>
+              )}
+
+              {formState.isSubmitSuccessful === false && (
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                  <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                    {t('Error-changing')}
                   </Alert>
                 </Snackbar>
               )}

@@ -121,7 +121,18 @@ function App() {
                 html: { height: '100%' },
                 body: {
                   height: '100%',
+                  // overflow: 'overlay',
+                  overflowY: 'scroll !important',
+                  width: 'auto',
+                  padding: '0 !important',
+
+                  // does not remove cumulative layout shift in safari
+                  scrollbarGutter: 'stable',
+                  minHeight: '100vh',
+                  textRendering: 'optimizeSpeed',
+                  lineHeight: 1.5,
                 },
+
                 '#root': {
                   display: 'flex',
                   flexDirection: 'column',

@@ -1,11 +1,9 @@
-import { Product } from '../../products/types/product.type';
-
-export interface AccessoryType {
+export interface CreateSnackFormType {
   name: string;
   price: number;
   description: string;
-  quantity: number;
   image_url: string;
+  quantity: number;
   weight: number;
   archived: boolean;
 }
