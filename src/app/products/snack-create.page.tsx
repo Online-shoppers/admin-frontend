@@ -47,6 +47,7 @@ export const SnackCreate = () => {
       const response = await createSnack(data);
       setSaveSuccess(true);
       setIsSaving(false);
+      window.location.reload();
     } catch (error) {
       setSaveError(true);
       setIsSaving(false);

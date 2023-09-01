@@ -48,6 +48,7 @@ export const AccessoryCreate = () => {
       const response = await createAccessory(data);
       setSaveSuccess(true);
       setIsSaving(false);
+      window.location.reload();
     } catch (error) {
       setSaveError(true);
       setIsSaving(false);
