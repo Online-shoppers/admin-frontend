@@ -11,7 +11,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { getAdminPageProducts } from './api/get-page-products.api';
 import CreateProductButtons from './components/create-product-button.component';
 
-const PAGE_SIZE = 20;
 const PARAM_PAGE = 'page';
 
 const useStyles = makeStyles(() => ({
@@ -36,9 +35,12 @@ const ProductsPage = () => {
   const classes = useStyles();
 
   const productQuery = useQuery(['page-product', page], async () => {
-    const response = await getAdminPageProducts(page, PAGE_SIZE);
+    const response = await getAdminPageProducts(page, totalPages);
     return response.data;
   });
+
+  const totalPages = Math.ceil(productQuery.data?.info.total || 0);
+
   useEffect(() => {
     productQuery.refetch();
   }, []);
