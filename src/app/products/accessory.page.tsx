@@ -76,9 +76,9 @@ export const Accessory = () => {
   return (
     <Box p={3}>
       {accessoryQuery.isLoading ? (
-        <Typography>Loading...</Typography>
+        <Typography>{t('Loading')}</Typography>
       ) : accessoryQuery.isError ? (
-        <Typography>Error loading data</Typography>
+        <Typography>{t('Error-loading')}</Typography>
       ) : (
         <Box display="flex" justifyContent="center">
           <Stack direction="row" width="100%" gap="1.5rem">

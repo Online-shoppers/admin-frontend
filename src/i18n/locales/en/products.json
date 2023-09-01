@@ -37,11 +37,17 @@
 
   "Name-required": "Name is required",
   "ImageUrl-required": "ImageUrl is required",
+  "ImageUrl-invalid": "ImageUrl is invalid",
   "Description-required": "Description is required",
   "Price-min": "Price value is not correct",
   "Price-required": "Price is required",
   "Quantity-min": "Quantity value is not correct",
   "Quantity-required": "Quantity is required",
   "Weight-min": "Weight value is not correct",
-  "Weight-required": "Weight is required"
+  "Weight-required": "Weight is required",
+  "Type-required": "Type is required",
+  "Archived-required": "Archive field is required",
+  "Create-accessory": "Creating accessory",
+  "Loading": "Loading...",
+  "Error-loading": "Data is not available now"
 }
