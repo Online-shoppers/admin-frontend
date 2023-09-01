@@ -52,16 +52,11 @@ const ProductsPage = () => {
 
   const totalPages = Math.ceil((productQuery.data?.info.total || 0) / PAGE_SIZE);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   const onChangePage = useCallback(
     (newPage: number) => {
       const newParams = new URLSearchParams(urlSearchString);
       newParams.set(PARAM_PAGE, newPage.toString());
 
-      scrollToTop();
       history(`${pathname}?${newParams.toString()}`);
     },
     [pathname, urlSearchString],
