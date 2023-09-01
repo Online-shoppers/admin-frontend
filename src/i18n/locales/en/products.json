@@ -8,5 +8,29 @@
   "Weight": "Weight",
   "Save-changing": "Save changes",
   "Price": "Price",
-  "Archived": "Archived"
+  "Archived": "Archived",
+  "Volume": "Volume",
+  "Country": "Country",
+  "Alcohol-by-volume": "Alcohol by volume",
+  "International-bittering-value": "Iternational bittering value",
+  "Bittering": "Bittering",
+
+  "validations": {
+    "Name-is-required": "Name is required",
+    "Price-is-required": "Price is required",
+    "Description-is-required": "Description is required",
+    "URL-is-required": "URL is required",
+    "Quantity-is-required": "Quantity is required",
+    "ABV-isrequired": "ABV isrequired",
+    "Country-is-required": "Country is required",
+    "Volume-is-required": "Volume is required",
+    "IBU-is-required": "IBU is required",
+
+    "Volume-must-be-a-number": "Volume must be a number",
+    "Quantity-must-be-a-number": "Quantity must be a number",
+    "IBU-must-be-a-number": "IBU must be a number",
+    "ABV-must-be-a-number": "ABV must be a number",
+
+    "URL-must-be-a-link": "URL must be a link"
+  }
 }

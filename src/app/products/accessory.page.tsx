@@ -1,20 +1,19 @@
-import { Alert, AlertTitle, Checkbox, FormControlLabel, Snackbar } from '@mui/material';
+import { Alert, Checkbox, FormControlLabel, Snackbar } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import { getProductInfo, updateAccessoryInfo } from './api/get-products.api';
+import { getAccessoryInfo, updateAccessoryInfo } from './api/get-products.api';
 import { AccessoryType } from './types/accessory.type';
 
 export const Accessory = () => {
   const { productId } = useParams();
-  const queryClient = useQueryClient();
   const { t } = useTranslation('product');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
@@ -31,8 +30,8 @@ export const Accessory = () => {
   const accessoryQuery = useQuery<AccessoryType>({
     queryKey: ['product', category, productId],
     queryFn: async () => {
-      const response = await getProductInfo(category, productId);
-      return response.data as AccessoryType;
+      const response = await getAccessoryInfo(productId);
+      return response.data;
     },
   });
 

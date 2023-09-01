@@ -10,19 +10,11 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import {
-  getProductInfo,
-  updateAccessoryInfo,
-  updateBeerInfo,
-  updateSnackInfo,
-} from './api/get-products.api';
-import { AccessoryType } from './types/accessory.type';
-import { BeerType } from './types/beer.type';
+import { getAccessoryInfo, updateSnackInfo } from './api/get-products.api';
 import { SnackType } from './types/snack.type';
 
 export const Snack = () => {
   const { productId } = useParams();
-  const queryClient = useQueryClient();
   const { t } = useTranslation('product');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
@@ -39,8 +31,8 @@ export const Snack = () => {
   const accessoryQuery = useQuery<SnackType>({
     queryKey: ['product', category, productId],
     queryFn: async () => {
-      const response = await getProductInfo(category, productId);
-      return response.data as AccessoryType;
+      const response = await getAccessoryInfo(productId);
+      return response.data;
     },
   });
 

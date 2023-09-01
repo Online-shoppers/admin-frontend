@@ -1,6 +1,5 @@
 import {
   Alert,
-  AlertTitle,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -13,33 +12,28 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 
-import { getProductInfo, updateAccessoryInfo } from './api/get-products.api';
 import { createAccessory } from './api/post-page-products.api';
 import { AccessoryTypes } from './enums/accessory-types.enum';
 import { AccessoryType } from './types/accessory.type';
 
 export const AccessoryCreate = () => {
-  const queryClient = useQueryClient();
   const { t } = useTranslation('product');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const category = 'accessories';
 
   const { control, handleSubmit } = useForm<AccessoryType>();
   const [open, setOpen] = useState(false);
-  const [archived, setArchived] = useState(false);
+
   const onSubmit = async (data: AccessoryType) => {
-    console.log(data);
     setIsSaving(true);
     setSaveError(false);
     setSaveSuccess(false);
+
     data.quantity = Number(data.quantity);
     data.price = Number(data.price);
     data.weight = Number(data.weight);

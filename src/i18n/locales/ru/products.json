@@ -8,5 +8,29 @@
   "Weight": "Вес",
   "Save-changing": "Сохранить изменения",
   "Price": "Цена",
-  "Archived": "Архивировать"
+  "Archived": "Архивировать",
+  "Volume": "Объем",
+  "Country": "Страна",
+  "Alcohol-by-volume": "Крепкость",
+  "International-bittering-value": "Международное значение горечи",
+  "Bittering": "Горечь",
+
+  "validations": {
+    "Name-is-required": "Имя - обязательное поле",
+    "Price-is-required": "Цена - обязательное поле",
+    "Description-is-required": "Описание - обязательное поле",
+    "URL-is-required": "URL - обязательное поле",
+    "Quantity-is-required": "Количество - обязательное поле",
+    "ABV-is-required": "ABV - обязательное поле",
+    "Country-is-required": "Страна - обязательное поле",
+    "Volume-is-required": "Объем - обязательное поле",
+    "IBU-is-required": "IBU - обязательное поле",
+
+    "Volume-must-be-a-number": "Объем должен быть числом",
+    "Quantity-must-be-a-number": "Количество - обязательное поле",
+    "IBU-must-be-a-number": "IBU должно быть числом",
+    "ABV-must-be-a-number": "ABV должно быть числом",
+
+    "URL-must-be-a-link": "URL должен быть ссылкой"
+  }
 }
