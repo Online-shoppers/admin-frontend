@@ -1,16 +1,17 @@
-import { Box, Button, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Pagination, Tooltip, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
 import copy from 'clipboard-copy';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getAdminPageProducts } from './api/get-page-products.api';
 import CreateProductButtons from './components/create-product-button.component';
 
+const PAGE_SIZE = 20;
 const PARAM_PAGE = 'page';
 const useStyles = makeStyles(() => ({
   productButtonContent: {
@@ -23,25 +24,49 @@ const useStyles = makeStyles(() => ({
     textTransform: 'none',
     margin: '5px',
   },
+  pagination: {
+    '& > .MuiPagination-ul': {
+      justifyContent: 'center',
+      margin: '5px',
+    },
+  },
+  customFooter: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
 }));
 
 const ProductsPage = () => {
   const colors = useTheme().palette;
-  const { search: urlSearchString } = useLocation();
+  const { search: urlSearchString, pathname } = useLocation();
   const params = new URLSearchParams(urlSearchString);
   const page = Number(params.get(PARAM_PAGE)) || 1;
   const history = useNavigate();
   const classes = useStyles();
 
   const productQuery = useQuery(['page-product', page], async () => {
-    const response = await getAdminPageProducts(page, totalPages);
+    const response = await getAdminPageProducts(page, PAGE_SIZE);
     return response.data;
   });
 
-  const totalPages = Math.ceil(productQuery.data?.info.total || 100);
-  useEffect(() => {
-    productQuery.refetch();
-  }, []);
+  const totalPages = Math.ceil((productQuery.data?.info.total || 0) / PAGE_SIZE);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const onChangePage = useCallback(
+    (newPage: number) => {
+      const newParams = new URLSearchParams(urlSearchString);
+      newParams.set(PARAM_PAGE, newPage.toString());
+
+      scrollToTop();
+      history(`${pathname}?${newParams.toString()}`);
+    },
+    [pathname, urlSearchString],
+  );
+
   const columns: GridColDef[] = [
     {
       field: 'id',
@@ -50,7 +75,7 @@ const ProductsPage = () => {
       renderCell: params => {
         const [tooltipOpenMap, setTooltipOpenMap] = useState<{ [key: string]: boolean }>({});
         const [tooltipOpen, setTooltipOpen] = useState(false);
-        const [tooltipTitle, setTooltipTitle] = useState('Copy ID'); // Initialize with "Copy ID"
+        const [tooltipTitle, setTooltipTitle] = useState('Copy ID');
 
         const toggleTooltip = (itemId: string) => {
           setTooltipOpenMap(prevState => ({
@@ -211,10 +236,25 @@ const ProductsPage = () => {
             disableRowSelectionOnClick
             rows={productQuery.data?.items || []}
             columns={columns}
-            initialState={{
-              pagination: { paginationModel: { pageSize: 20 } },
+            slots={{
+              // Custom footer of DataGrid
+              footer: () => (
+                <Box className={classes.customFooter}>
+                  <Typography>
+                    Page {page} of {totalPages}
+                  </Typography>
+                  <Box>
+                    <Pagination
+                      count={totalPages}
+                      page={page}
+                      onChange={(_, value) => onChangePage(value)}
+                      color="primary"
+                      className={classes.pagination}
+                    />
+                  </Box>
+                </Box>
+              ),
             }}
-            pageSizeOptions={[10, 20]}
           />
         </Box>
       )}
