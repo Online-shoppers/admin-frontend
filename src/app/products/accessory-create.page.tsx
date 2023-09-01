@@ -36,17 +36,14 @@ export const AccessoryCreate = () => {
   const category = 'accessories';
 
   const schema = yup.object().shape({
-    name: yup.string().required('Name is required'),
-    price: yup.number().min(1, 'Price must be a positive number').required('Price is required'),
-    type: yup.string().required('Type is required'),
-    description: yup.string().required('Description is required'),
-    quantity: yup.number().min(1, 'Quantity must be at least 1').required('Quantity is required'),
-    weight: yup
-      .number()
-      .min(0.1, 'Weight must be a positive number')
-      .required('Weight is required'),
-    image_url: yup.string().url('Invalid image URL').required('Image URL is required'),
-    archived: yup.boolean().required('Archived is required'),
+    name: yup.string().required(t('Name-required')),
+    price: yup.number().min(1, t('Price-min')).required(t('Price-required')),
+    type: yup.string().required(t('Type-required')),
+    description: yup.string().required(t('Description-required')),
+    quantity: yup.number().min(1, t('Quantity-min')).required(t('Quantity-required')),
+    weight: yup.number().min(0.1, t('Weight-min')).required(t('Weight-required')),
+    image_url: yup.string().url(t('ImageURL-invalid')).required(t('ImageURL-required')),
+    archived: yup.boolean().required(t('Archived-required')),
   });
 
   const { control, handleSubmit, formState } = useForm<AccessoryCreateType>({
@@ -89,7 +86,7 @@ export const AccessoryCreate = () => {
       <Box width="80%" p={3} boxShadow={3} display="flex">
         <Box flex="1" ml={2} display="flex" flexDirection="column">
           <Typography variant="h4" sx={{ paddingBottom: 3 }}>
-            Create Accessory
+            {t('Create-accessory')}
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box display="flex" flexDirection="column" gap={2}>
