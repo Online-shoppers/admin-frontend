@@ -97,7 +97,12 @@ export const Accessory = () => {
                     control={control}
                     defaultValue={accessoryQuery.data.price}
                     render={({ field }) => (
-                      <TextField {...field} label={t('Price')} type="number" />
+                      <TextField
+                        {...field}
+                        label={t('Price')}
+                        type="number"
+                        inputProps={{ min: 0 }}
+                      />
                     )}
                   />
                   <Controller
@@ -111,7 +116,12 @@ export const Accessory = () => {
                     control={control}
                     defaultValue={accessoryQuery.data.quantity}
                     render={({ field }) => (
-                      <TextField {...field} type="number" label={t('Quantity')} />
+                      <TextField
+                        {...field}
+                        type="number"
+                        label={t('Quantity')}
+                        inputProps={{ min: 0 }}
+                      />
                     )}
                   />
                   <Controller
@@ -119,7 +129,12 @@ export const Accessory = () => {
                     control={control}
                     defaultValue={accessoryQuery.data.weight}
                     render={({ field }) => (
-                      <TextField {...field} type="number" label={t('Weight')} />
+                      <TextField
+                        {...field}
+                        type="number"
+                        label={t('Weight')}
+                        inputProps={{ min: 0 }}
+                      />
                     )}
                   />
                   <Controller
