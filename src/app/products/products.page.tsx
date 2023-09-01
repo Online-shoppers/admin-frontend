@@ -86,20 +86,52 @@ const ProductsPage = () => {
         );
       },
     },
-    { field: 'name', headerName: 'Name', flex: 2, cellClassName: 'name-column--cell' },
+    {
+      field: 'name',
+      headerName: 'Name',
+      flex: 2,
+      cellClassName: 'name-column--cell',
+      sortable: false,
+      filterable: false,
+    },
     {
       field: 'description',
       headerName: 'Description',
       flex: 5,
       cellClassName: 'description-column--cell',
+      sortable: false,
+      filterable: false,
     },
-    { field: 'category', flex: 2, headerName: 'Category', cellClassName: 'category-column--cell' },
-    { field: 'quantity', flex: 1, headerName: 'Quantity', cellClassName: 'quantity-column--cell' },
-    { field: 'price', headerName: 'Price', flex: 1, cellClassName: 'price-column--cell' },
+    {
+      field: 'category',
+      flex: 2,
+      headerName: 'Category',
+      cellClassName: 'category-column--cell',
+      sortable: false,
+      filterable: false,
+    },
+    {
+      field: 'quantity',
+      flex: 1,
+      headerName: 'Quantity',
+      cellClassName: 'quantity-column--cell',
+      sortable: false,
+      filterable: false,
+    },
+    {
+      field: 'price',
+      headerName: 'Price',
+      flex: 1,
+      cellClassName: 'price-column--cell',
+      sortable: false,
+      filterable: false,
+    },
     {
       field: 'to product',
       headerName: '',
       flex: 2,
+      sortable: false,
+      filterable: false,
       renderCell: params => {
         const handleGoToClick = () => {
           const productId = params.row.id;
@@ -179,6 +211,10 @@ const ProductsPage = () => {
             disableRowSelectionOnClick
             rows={productQuery.data?.items || []}
             columns={columns}
+            initialState={{
+              pagination: { paginationModel: { pageSize: 20 } },
+            }}
+            pageSizeOptions={[10, 20]}
           />
         </Box>
       )}
