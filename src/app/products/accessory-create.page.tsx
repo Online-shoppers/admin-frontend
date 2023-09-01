@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
-  AlertTitle,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -14,26 +13,22 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import * as yup from 'yup';
 
-import { getProductInfo, updateAccessoryInfo } from './api/get-products.api';
 import { createAccessory } from './api/post-page-products.api';
 import { AccessoryTypes } from './enums/accessory-types.enum';
 import { AccessoryCreateType } from './types/accessory-create.type';
 import { AccessoryType } from './types/accessory.type';
 
 export const AccessoryCreate = () => {
-  const queryClient = useQueryClient();
   const { t } = useTranslation('product');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const category = 'accessories';
 
   const schema = yup.object().shape({
     name: yup.string().required(t('Name-required')),
@@ -51,12 +46,12 @@ export const AccessoryCreate = () => {
   });
 
   const [open, setOpen] = useState(false);
-  const [archived, setArchived] = useState(false);
+
   const onSubmit = async (data: AccessoryCreateType) => {
-    console.log(data);
     setIsSaving(true);
     setSaveError(false);
     setSaveSuccess(false);
+
     data.quantity = Number(data.quantity);
     data.price = Number(data.price);
     data.weight = Number(data.weight);
@@ -125,7 +120,7 @@ export const AccessoryCreate = () => {
                     <Select {...field} label={t('Type')} inputProps={{ min: 0 }}>
                       {Object.values(AccessoryTypes).map(type => (
                         <MenuItem key={type} value={type}>
-                          {type}
+                          {t(`accessories.${type}`)}
                         </MenuItem>
                       ))}
                     </Select>

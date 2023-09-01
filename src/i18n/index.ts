@@ -6,9 +6,11 @@ import { initReactI18next } from 'react-i18next';
 import authEn from './locales/en/auth.json';
 import errorsEn from './locales/en/errors.json';
 import productEn from './locales/en/products.json';
+import validationsEn from './locales/en/validations.json';
 import authRu from './locales/ru/auth.json';
 import errorsRu from './locales/ru/errors.json';
 import productRu from './locales/ru/products.json';
+import validationsRu from './locales/ru/validations.json';
 
 i18n
   .use(Backend)
@@ -25,8 +27,8 @@ i18n
       escapeValue: false,
     },
     resources: {
-      en: { auth: authEn, errors: errorsEn, product: productEn },
-      ru: { auth: authRu, errors: errorsRu, product: productRu },
+      en: { auth: authEn, errors: errorsEn, product: productEn, validations: validationsEn },
+      ru: { auth: authRu, errors: errorsRu, product: productRu, validations: validationsRu },
     },
     detection: {
       caches: ['cookie'],

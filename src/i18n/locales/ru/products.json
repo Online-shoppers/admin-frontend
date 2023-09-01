@@ -9,6 +9,57 @@
   "Save-changing": "Сохранить изменения",
   "Price": "Цена",
   "Archived": "Архивировать",
+  "Volume": "Объем",
+  "Country": "Страна",
+  "Alcohol-by-volume": "Крепкость",
+  "International-bittering-value": "Международное значение горечи",
+  "Bittering": "Горечь",
+
+  "categories": {
+    "beer": "Beer",
+    "snacks": "Snacks",
+    "accessories": "Accessories"
+  },
+
+  "beer": {
+    "ALE": "Эль",
+    "LAGER": "Лягер",
+    "WHEAT_BEER": "Пшеничное пиво"
+  },
+
+  "snacks": {
+    "PRETZELS": "Крендели",
+    "NACHOS": "Начос",
+    "SPICY_WINGS": "Острые крылышки"
+  },
+
+  "accessories": {
+    "BEER_GLASSES": "Пивные стаканы",
+    "BOTTLE_OPENER": "Открывашки",
+    "BEER_COASTERS": "Подставки"
+  },
+
+  "validations": {
+    "Name-is-required": "Имя - обязательное поле",
+    "Price-is-required": "Цена - обязательное поле",
+    "Description-is-required": "Описание - обязательное поле",
+    "URL-is-required": "URL - обязательное поле",
+    "Quantity-is-required": "Количество - обязательное поле",
+    "ABV-is-required": "ABV - обязательное поле",
+    "Country-is-required": "Страна - обязательное поле",
+    "Volume-is-required": "Объем - обязательное поле",
+    "IBU-is-required": "IBU - обязательное поле",
+    "Weight-is-required": "Вес - обязательное поле",
+    "Type-is-required": "Тип - обязательное поле",
+
+    "Volume-must-be-a-number": "Объем должен быть числом",
+    "Quantity-must-be-a-number": "Количество - обязательное поле",
+    "IBU-must-be-a-number": "IBU должно быть числом",
+    "ABV-must-be-a-number": "ABV должно быть числом",
+
+    "URL-must-be-a-link": "URL должен быть ссылкой"
+  },
+
   "Name-required": "Заполните имя",
   "ImageUrl-required": "Заполните ссылку",
   "ImageUrl-invalid": "Неверная ссылка",
@@ -21,7 +72,9 @@
   "Weight-required": "Заполните вес",
   "Type-required": "Заполните тип",
   "Archived-required": "Заполните поле архивирования",
-  "Create-accessory": "Создание аккссесуара",
+  "Create-beer": "Добавление пива",
+  "Create-snack": "Добавление снека",
+  "Create-accessory": "Добавление аксессуара",
   "Loading": "Загрузка...",
   "Error-loading": "Ошибка загрузки данных."
 }

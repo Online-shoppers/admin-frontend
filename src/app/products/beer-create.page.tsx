@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Alert,
-  AlertTitle,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -14,55 +13,32 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 import * as yup from 'yup';
 
 import { createBeer } from './api/post-page-products.api';
 import { BeerTypes } from './enums/beer-types.enum';
+import { createBeerSchema } from './schemas/create-beer.schema';
 import { BeerCreateType } from './types/beer-create.type';
 
 export const BeerCreate = () => {
-  const queryClient = useQueryClient();
   const { t } = useTranslation('product');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const category = 'beer';
-
-  const schema = yup.object().shape({
-    name: yup.string().required('Name is required'),
-    price: yup.number().min(0, 'Price must be a positive number').required('Price is required'),
-    type: yup.string().required('Type is required'),
-    description: yup.string().required('Description is required'),
-    quantity: yup.number().min(1, 'Quantity must be at least 1').required('Quantity is required'),
-    abv: yup.number().min(0, 'ABV must be a positive number').required('ABV is required'),
-    country: yup.string().required('Country is required'),
-    volume: yup.number().min(0, 'Volume must be a positive number').required('Volume is required'),
-    ibu: yup.number().min(0, 'IBU must be a positive number').required('IBU is required'),
-    image_url: yup.string().url('Invalid image URL').required('Image URL is required'),
-    archived: yup.boolean().required('Archived is required'),
-  });
 
   const { control, handleSubmit, formState } = useForm<BeerCreateType>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(createBeerSchema),
   });
 
   const [open, setOpen] = useState(false);
-  const [archived, setArchived] = useState(false);
+
   const onSubmit = async (data: BeerCreateType) => {
-    console.log(data);
     setIsSaving(true);
     setSaveError(false);
     setSaveSuccess(false);
-    data.quantity = Number(data.quantity);
-    data.price = Number(data.price);
-    data.abv = Number(data.abv);
-    data.volume = Number(data.volume);
-    data.ibu = Number(data.ibu);
 
     try {
       const response = await createBeer(data);
@@ -89,7 +65,7 @@ export const BeerCreate = () => {
       <Box width="80%" p={3} boxShadow={3} display="flex">
         <Box flex="1" ml={2} display="flex" flexDirection="column">
           <Typography variant="h4" sx={{ paddingBottom: 3 }}>
-            Create Beer
+            {t('Create-beer')}
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box display="flex" flexDirection="column" gap={2}>
@@ -101,7 +77,7 @@ export const BeerCreate = () => {
                     {...field}
                     label={t('Name')}
                     error={fieldState.invalid}
-                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                    helperText={fieldState.error ? t(fieldState.error.message) : ''}
                   />
                 )}
               />
@@ -115,7 +91,7 @@ export const BeerCreate = () => {
                     type="number"
                     inputProps={{ min: 0 }}
                     error={fieldState.invalid}
-                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                    helperText={fieldState.error ? t(fieldState.error.message) : ''}
                   />
                 )}
               />
@@ -128,7 +104,7 @@ export const BeerCreate = () => {
                     <Select {...field} label={t('Type')} inputProps={{ min: 0 }}>
                       {Object.values(BeerTypes).map(type => (
                         <MenuItem key={type} value={type}>
-                          {type}
+                          {t(`beer.${type}`)}
                         </MenuItem>
                       ))}
                     </Select>
@@ -143,7 +119,7 @@ export const BeerCreate = () => {
                     {...field}
                     label={t('Description')}
                     error={fieldState.invalid}
-                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                    helperText={fieldState.error ? t(fieldState.error.message) : ''}
                   />
                 )}
               />
@@ -157,7 +133,7 @@ export const BeerCreate = () => {
                     label={t('Quantity')}
                     inputProps={{ min: 0 }}
                     error={fieldState.invalid}
-                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                    helperText={fieldState.error ? t(fieldState.error.message) : ''}
                   />
                 )}
               />
@@ -168,10 +144,10 @@ export const BeerCreate = () => {
                   <TextField
                     {...field}
                     type="number"
-                    label={t('Abv')}
+                    label={t('Alcohol-by-volume')}
                     inputProps={{ min: 0 }}
                     error={fieldState.invalid}
-                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                    helperText={fieldState.error ? t(fieldState.error.message) : ''}
                   />
                 )}
               />
@@ -184,7 +160,7 @@ export const BeerCreate = () => {
                     type="text"
                     label={t('Country')}
                     error={fieldState.invalid}
-                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                    helperText={fieldState.error ? t(fieldState.error.message) : ''}
                   />
                 )}
               />
@@ -198,7 +174,7 @@ export const BeerCreate = () => {
                     label={t('Volume')}
                     inputProps={{ min: 0 }}
                     error={fieldState.invalid}
-                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                    helperText={fieldState.error ? t(fieldState.error.message) : ''}
                   />
                 )}
               />
@@ -209,10 +185,10 @@ export const BeerCreate = () => {
                   <TextField
                     {...field}
                     type="number"
-                    label={t('Ibu')}
+                    label={t('International-bittering-value')}
                     inputProps={{ min: 0 }}
                     error={fieldState.invalid}
-                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                    helperText={fieldState.error ? t(fieldState.error.message) : ''}
                   />
                 )}
               />
@@ -224,7 +200,7 @@ export const BeerCreate = () => {
                     {...field}
                     label={t('Image')}
                     error={fieldState.invalid}
-                    helperText={fieldState.invalid ? fieldState.error?.message : ''}
+                    helperText={fieldState.error ? t(fieldState.error.message) : ''}
                   />
                 )}
               />

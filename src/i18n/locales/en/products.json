@@ -9,6 +9,57 @@
   "Save-changing": "Save changes",
   "Price": "Price",
   "Archived": "Archived",
+  "Volume": "Volume",
+  "Country": "Country",
+  "Alcohol-by-volume": "Alcohol by volume",
+  "International-bittering-value": "Iternational bittering value",
+  "Bittering": "Bittering",
+
+  "categories": {
+    "beer": "Beer",
+    "snacks": "Snacks",
+    "accessories": "Accessories"
+  },
+
+  "beer": {
+    "ALE": "Ale",
+    "LAGER": "Lager",
+    "WHEAT_BEER": "Wheet beer"
+  },
+
+  "snacks": {
+    "PRETZELS": "Pretzels",
+    "NACHOS": "Nachos",
+    "SPICY_WINGS": "Spicy wings"
+  },
+
+  "accessories": {
+    "BEER_GLASSES": "Beer glasses",
+    "BOTTLE_OPENER": "Bottle opener",
+    "BEER_COASTERS": "Beer coasters"
+  },
+
+  "validations": {
+    "Name-is-required": "Name is required",
+    "Price-is-required": "Price is required",
+    "Description-is-required": "Description is required",
+    "URL-is-required": "URL is required",
+    "Quantity-is-required": "Quantity is required",
+    "ABV-is-required": "ABV is required",
+    "Country-is-required": "Country is required",
+    "Volume-is-required": "Volume is required",
+    "IBU-is-required": "IBU is required",
+    "Weight-is-required": "Weight is required",
+    "Type-is-required": "Type is required",
+
+    "Volume-must-be-a-number": "Volume must be a number",
+    "Quantity-must-be-a-number": "Quantity must be a number",
+    "IBU-must-be-a-number": "IBU must be a number",
+    "ABV-must-be-a-number": "ABV must be a number",
+
+    "URL-must-be-a-link": "URL must be a link"
+  },
+
   "Name-required": "Name is required",
   "ImageUrl-required": "ImageUrl is required",
   "ImageUrl-invalid": "ImageUrl is invalid",
@@ -21,7 +72,9 @@
   "Weight-required": "Weight is required",
   "Type-required": "Type is required",
   "Archived-required": "Archive field is required",
-  "Create-accessory": "Creating accessory",
+  "Create-beer": "Create beer",
+  "Create-snack": "Create snack",
+  "Create-accessory": "Create accessory",
   "Loading": "Loading...",
   "Error-loading": "Data is not available now"
 }
