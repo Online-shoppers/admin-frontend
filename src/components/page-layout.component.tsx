@@ -97,9 +97,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })
 
 const StyledGrid = styled(Grid, { shouldForwardProp: prop => prop !== 'open' })(({ theme }) => ({
   flex: 1,
-  marginTop: theme.spacing(10),
-  marginLeft: theme.spacing(10),
-  marginRight: theme.spacing(5),
+  paddingTop: theme.spacing(12),
+  paddingLeft: theme.spacing(10),
+  paddingRight: theme.spacing(5),
+  paddingBottom: theme.spacing(7),
 }));
 
 interface PageLayoutProps {

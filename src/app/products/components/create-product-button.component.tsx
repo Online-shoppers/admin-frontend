@@ -1,24 +1,13 @@
+import { Stack } from '@mui/material';
 import Button from '@mui/material/Button';
-import { makeStyles } from '@mui/styles';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { ProductCategories } from '../enums/product-categories.enum';
 
-const useStyles = makeStyles(() => ({
-  productButtonContent: {
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-  productButton: {
-    width: '150px',
-    textTransform: 'none',
-    margin: '5px',
-  },
-}));
-
 const CreateProductButtons = () => {
-  const classes = useStyles();
+  const { t } = useTranslation('product');
+
   const history = useNavigate();
 
   const handleGoToClick = (category: ProductCategories) => {
@@ -26,16 +15,15 @@ const CreateProductButtons = () => {
   };
 
   const renderButtons = () => {
-    return Object.values(ProductCategories).map(category => (
-      <Button
-        key={category}
-        variant="outlined"
-        className={classes.productButton}
-        onClick={() => handleGoToClick(category)}
-      >
-        <div className={classes.productButtonContent}>{`Add ${category}`}</div>
-      </Button>
-    ));
+    return (
+      <Stack direction="row" gap="1rem">
+        {Object.values(ProductCategories).map(category => (
+          <Button key={category} variant="outlined" onClick={() => handleGoToClick(category)}>
+            {t(`product:Add-${category}`)}
+          </Button>
+        ))}
+      </Stack>
+    );
   };
 
   return <div>{renderButtons()}</div>;
