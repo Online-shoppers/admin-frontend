@@ -14,9 +14,9 @@ repository.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     const accessToken = storage.get(ACCESS_TOKEN_KEY);
 
+    config.headers['x-lang'] = i18n.language;
     if (accessToken && config?.headers) {
       config.headers.Authorization = `Bearer ${accessToken}`;
-      config.headers['x-lang'] = i18n.language;
     }
 
     return config;

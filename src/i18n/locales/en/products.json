@@ -6,6 +6,7 @@
   "Description": "Description",
   "Image": "Image URL",
   "Weight": "Weight",
+  "Type": "Type",
   "Save-changing": "Save changes",
   "Price": "Price",
   "Archived": "Archived",
@@ -14,6 +15,12 @@
   "Alcohol-by-volume": "Alcohol by volume",
   "International-bittering-value": "Iternational bittering value",
   "Bittering": "Bittering",
+
+  "Add-beer": "Add beer",
+  "Add-snacks": "Add snack",
+  "Add-accessories": "Add accessory",
+
+  "Page-n-of": "Page {{n}} of {{total}}",
 
   "categories": {
     "beer": "Beer",
@@ -58,6 +65,15 @@
     "ABV-must-be-a-number": "ABV must be a number",
 
     "URL-must-be-a-link": "URL must be a link"
+  },
+
+  "columns": {
+    "Created": "Created",
+    "Updated": "Updated",
+    "Category": "Category",
+    "Name": "Name",
+    "Quantity": "Quantity",
+    "Price": "Price"
   },
 
   "Name-required": "Name is required",
