@@ -1,8 +1,11 @@
 import { CssBaseline, GlobalStyles } from '@mui/material';
+import * as locales from '@mui/material/locale';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import jwt_decode from 'jwt-decode';
-import { Suspense, useCallback, useEffect, useRef } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BrowserRouter as Router } from 'react-router-dom';
 import storage from 'storage/admin';
 
@@ -20,6 +23,8 @@ import { theme } from 'theme';
 import AppRoutes from './app.routes';
 import ErrorBoundary from './components/error-boundary.component';
 
+type SupportedLocales = keyof typeof locales;
+
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnMount: false, refetchOnWindowFocus: false } },
 });
@@ -28,6 +33,18 @@ const queryClient = new QueryClient({
 const FIVE_MINUTES = 1000 * 60 * 5;
 
 function App() {
+  const { i18n } = useTranslation();
+
+  const languages: Record<string, SupportedLocales> = {
+    en: 'enUS',
+    ru: 'ruRU',
+  };
+
+  const themeWithLocale = useMemo(
+    () => createTheme(theme, locales[languages[i18n.language]]),
+    [i18n.language, theme],
+  );
+
   const refOnce = useRef(false);
 
   const dispatch = useAppDispatch();
@@ -115,7 +132,7 @@ function App() {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider theme={themeWithLocale}>
             <GlobalStyles
               styles={{
                 html: { height: '100%' },
@@ -137,6 +154,12 @@ function App() {
                   display: 'flex',
                   flexDirection: 'column',
                   height: '100%',
+                },
+                '& .MuiDataGrid-cell:focus-within, & .MuiDataGrid-cell:focus': {
+                  outline: 'none !important',
+                },
+                '& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-columnHeader:focus': {
+                  outline: 'none !important',
                 },
               }}
             />

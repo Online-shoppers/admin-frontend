@@ -6,6 +6,7 @@
   "Description": "Описание",
   "Image": "Ссылка на картинку",
   "Weight": "Вес",
+  "Type": "Тип",
   "Save-changing": "Сохранить изменения",
   "Price": "Цена",
   "Archived": "Архивировать",
@@ -15,10 +16,16 @@
   "International-bittering-value": "Международное значение горечи",
   "Bittering": "Горечь",
 
+  "Add-beer": "Добавить пиво",
+  "Add-snacks": "Добавить снек",
+  "Add-accessories": "Добавить аксессуар",
+
+  "Page-n-of": "Страница {{n}} из {{total}}",
+
   "categories": {
-    "beer": "Beer",
-    "snacks": "Snacks",
-    "accessories": "Accessories"
+    "beer": "Пиво",
+    "snacks": "Снеки",
+    "accessories": "Аксессуары"
   },
 
   "beer": {
@@ -58,6 +65,15 @@
     "ABV-must-be-a-number": "ABV должно быть числом",
 
     "URL-must-be-a-link": "URL должен быть ссылкой"
+  },
+
+  "columns": {
+    "Created": "Создано",
+    "Updated": "Изменено",
+    "Category": "Категория",
+    "Name": "Имя",
+    "Quantity": "Количество",
+    "Price": "Цена"
   },
 
   "Name-required": "Заполните имя",

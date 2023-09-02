@@ -1,35 +1,42 @@
-import { Box, Button, Pagination, Tooltip, Typography } from '@mui/material';
+import { Box, Pagination, Stack, Tooltip, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRenderCellParams, GridRowParams } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
-import copy from 'clipboard-copy';
-import { useCallback, useState } from 'react';
-import { useEffect } from 'react';
+import { SHORT_DATE_FORMAT } from 'dates/formats';
+import dayjs from 'dayjs';
+import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getAdminPageProducts } from './api/get-page-products.api';
 import CreateProductButtons from './components/create-product-button.component';
+import { Product } from './types/product.type';
 
 const PAGE_SIZE = 20;
 const PARAM_PAGE = 'page';
 const useStyles = makeStyles(() => ({
-  productButtonContent: {
+  ellipsis: {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
-  productButton: {
-    width: '150px',
-    textTransform: 'none',
-    margin: '5px',
+
+  row: {
+    cursor: 'pointer',
   },
+
+  tooltipPopper: {
+    fontSize: '2rem',
+  },
+
   pagination: {
     '& > .MuiPagination-ul': {
       justifyContent: 'center',
       margin: '5px',
     },
   },
+
   customFooter: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -38,11 +45,16 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ProductsPage = () => {
+  const { t } = useTranslation('product');
+
   const colors = useTheme().palette;
+
   const { search: urlSearchString, pathname } = useLocation();
   const params = new URLSearchParams(urlSearchString);
   const page = Number(params.get(PARAM_PAGE)) || 1;
-  const history = useNavigate();
+
+  const navigate = useNavigate();
+
   const classes = useStyles();
 
   const productQuery = useQuery(['page-product', page], async () => {
@@ -57,7 +69,7 @@ const ProductsPage = () => {
       const newParams = new URLSearchParams(urlSearchString);
       newParams.set(PARAM_PAGE, newPage.toString());
 
-      history(`${pathname}?${newParams.toString()}`);
+      navigate(`${pathname}?${newParams.toString()}`);
     },
     [pathname, urlSearchString],
   );
@@ -65,142 +77,89 @@ const ProductsPage = () => {
   const columns: GridColDef[] = [
     {
       field: 'id',
-      flex: 2,
       headerName: 'ID',
+      width: 100,
       renderCell: params => {
-        const [tooltipOpenMap, setTooltipOpenMap] = useState<{ [key: string]: boolean }>({});
-        const [tooltipOpen, setTooltipOpen] = useState(false);
-        const [tooltipTitle, setTooltipTitle] = useState('Copy ID');
-
-        const toggleTooltip = (itemId: string) => {
-          setTooltipOpenMap(prevState => ({
-            ...prevState,
-            [itemId]: !prevState[itemId],
-          }));
-        };
-
-        const handleCopyClick = (idToCopy: string) => {
-          copy(idToCopy);
-
-          setTooltipTitle('Copied!');
-
-          setTimeout(() => {
-            setTooltipTitle('Copy ID');
-            setTooltipOpen(false);
-          }, 5000);
-        };
-
         return (
-          <Box display="flex" maxWidth={'100%'}>
-            <Tooltip
-              title={tooltipTitle}
-              open={tooltipOpenMap[params.row.id] || false}
-              onClose={() => toggleTooltip(params.row.id)}
-              onOpen={() => toggleTooltip(params.row.id)}
-            >
-              <Button variant="outlined" onClick={() => handleCopyClick(params.row.id)}>
-                <div className={classes.productButtonContent}>{params.row.id}</div>
-              </Button>
-            </Tooltip>
-          </Box>
+          <Tooltip title={params.id} classes={{ popper: classes.tooltipPopper }}>
+            <div className={classes.ellipsis}>{params.row.id}</div>
+          </Tooltip>
         );
       },
     },
+
     {
-      field: 'name',
-      headerName: 'Name',
-      flex: 2,
-      cellClassName: 'name-column--cell',
+      field: 'created',
+      headerName: t('product:columns.Created'),
       sortable: false,
       filterable: false,
+      width: 130,
+      renderCell: (params: GridRenderCellParams<Product>) => {
+        return dayjs(params.row.created).format(SHORT_DATE_FORMAT);
+      },
     },
+
     {
-      field: 'description',
-      headerName: 'Description',
-      flex: 5,
-      cellClassName: 'description-column--cell',
+      field: 'updated',
+      headerName: t('product:columns.Updated'),
       sortable: false,
       filterable: false,
+      width: 130,
+      renderCell: (params: GridRenderCellParams<Product>) => {
+        return dayjs(params.row.created).format(SHORT_DATE_FORMAT);
+      },
     },
+
     {
       field: 'category',
-      flex: 2,
-      headerName: 'Category',
-      cellClassName: 'category-column--cell',
+      headerName: t('product:columns.Category'),
       sortable: false,
       filterable: false,
+      width: 150,
+      renderCell: (params: GridRenderCellParams<Product>) => {
+        return t(`product:categories.${params.row.category}`);
+      },
     },
+
+    {
+      field: 'name',
+      headerName: t('product:columns.Name'),
+      flex: 1,
+      sortable: false,
+      filterable: false,
+      minWidth: 200,
+    },
+
     {
       field: 'quantity',
-      flex: 1,
-      headerName: 'Quantity',
-      cellClassName: 'quantity-column--cell',
+      width: 100,
+      headerName: t('product:columns.Quantity'),
       sortable: false,
       filterable: false,
     },
+
     {
       field: 'price',
-      headerName: 'Price',
-      flex: 1,
-      cellClassName: 'price-column--cell',
+      headerName: t('product:columns.Price'),
+      width: 70,
       sortable: false,
       filterable: false,
-    },
-    {
-      field: 'to product',
-      headerName: '',
-      flex: 2,
-      sortable: false,
-      filterable: false,
-      renderCell: params => {
-        const handleGoToClick = () => {
-          const productId = params.row.id;
-          const category = params.row.category;
-          history(`/products/${category}/${productId}`);
-        };
-
-        const [tooltipOpenMap, setTooltipOpenMap] = useState<{ [key: string]: boolean }>({});
-
-        const toggleTooltip = (itemId: string) => {
-          setTooltipOpenMap(prevState => ({
-            ...prevState,
-            [itemId]: !prevState[itemId],
-          }));
-        };
-
-        return (
-          <Box m="0 auto">
-            <Tooltip
-              title={`Go to ${params.row.name}`}
-              open={tooltipOpenMap[params.row.id] || false}
-              onClose={() => toggleTooltip(params.row.id)}
-              onOpen={() => toggleTooltip(params.row.id)}
-            >
-              <Button
-                variant="outlined"
-                className={classes.productButton}
-                onClick={handleGoToClick}
-              >
-                <div className={classes.productButtonContent}>{params.row.name}</div>
-              </Button>
-            </Tooltip>
-          </Box>
-        );
-      },
     },
   ];
 
   return (
-    <Box m="20px">
+    <Box>
       {productQuery.isLoading ? (
         <Typography>Loading...</Typography>
       ) : productQuery.isError ? (
         <Typography>Error loading data</Typography>
       ) : (
-        <Box
-          m="40px 0 0 0"
+        <Stack
+          direction="column"
+          gap="1rem"
           height="fit-content"
           sx={{
+            width: '100%',
             '& .MuiDataGrid-root': {
               border: 'none',
             },
@@ -227,22 +186,32 @@ const ProductsPage = () => {
           }}
         >
           <CreateProductButtons />
+
           <DataGrid
             disableRowSelectionOnClick
+            disableColumnSelector
+            disableColumnMenu
+            classes={{ row: classes.row }}
+            onRowClick={(params: GridRowParams<Product>) =>
+              navigate(`./${params.row.category}/${params.row.id}`)
+            }
             rows={productQuery.data?.items || []}
+            localeText={{
+              toolbarDensity: 'Size',
+              toolbarDensityLabel: 'Size',
+            }}
             columns={columns}
             slots={{
               // Custom footer of DataGrid
               footer: () => (
                 <Box className={classes.customFooter}>
-                  <Typography>
-                    Page {page} of {totalPages}
-                  </Typography>
+                  <Typography>{t(`product:Page-n-of`, { n: page, total: totalPages })}</Typography>
                   <Box>
                     <Pagination
                       count={totalPages}
                       page={page}
                       onChange={(_, value) => onChangePage(value)}
+                      translate="yes"
                       color="primary"
                       className={classes.pagination}
                     />
@@ -251,7 +220,7 @@ const ProductsPage = () => {
               ),
             }}
           />
-        </Box>
+        </Stack>
       )}
     </Box>
   );

@@ -1,4 +1,6 @@
+import dayjs from 'dayjs';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 
@@ -21,6 +23,10 @@ export const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
 };
 
 const AppRoutes = () => {
+  const { i18n } = useTranslation();
+
+  dayjs.locale(i18n.language);
+
   return (
     <Routes>
       <Route path="/auth/*" element={<AuthRoutes />} />
