@@ -5,13 +5,13 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useQuery } from '@tanstack/react-query';
-import { isAxiosError } from 'axios';
-import { DefaultError } from 'errors/default.error';
 import * as React from 'react';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router-dom';
+
+import { getErrorMessages } from 'utils/get-error-messages.util';
 
 import { getSnackInfo, updateSnackInfo } from './api/get-products.api';
 import { ProductCategories } from './enums/product-categories.enum';
@@ -53,12 +53,10 @@ export const Snack = () => {
       setSaveSuccess(true);
       snackQuery.refetch();
     } catch (error) {
+      const messages = getErrorMessages(error);
+      const text = messages ? messages[0] : t('errors:Something-went-wrong');
       setIsError(true);
-      if (isAxiosError<DefaultError>(error)) {
-        setErrorMessage(error.response?.data.message || t('errors:Something-went-wrong'));
-      } else {
-        setErrorMessage(t('errors:Something-went-wrong'));
-      }
+      setErrorMessage(text);
     }
     setOpen(true);
   });
