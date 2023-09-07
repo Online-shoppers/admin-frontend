@@ -6,8 +6,6 @@ import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { makeStyles } from '@mui/styles';
-import { isAxiosError } from 'axios';
-import { DefaultError } from 'errors/default.error';
 import jwt_decode from 'jwt-decode';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -15,6 +13,8 @@ import { useTranslation } from 'react-i18next';
 import storage from 'storage/admin';
 
 import { useAppDispatch } from 'store';
+
+import { getErrorMessages } from 'utils/get-error-messages.util';
 
 import { signIn } from './api/sign-in.api';
 import { ACCESS_TOKEN_KEY, EXPIRATION_DATE_KEY, REFRESH_TOKEN_KEY } from './constants';
@@ -87,14 +87,10 @@ const SignIn = () => {
     } catch (err) {
       console.error(err);
 
+      const messages = getErrorMessages(err);
+      const text = messages ? messages[0] : t('errors:Something-went-wrong');
       setAlertOpen(true);
-      if (isAxiosError<DefaultError>(err)) {
-        setAlertText(err.response?.data.message || err.message);
-      } else if (err instanceof Error) {
-        setAlertText(err.message);
-      } else {
-        setAlertText(t('errors:Something-went-wrong'));
-      }
+      setAlertText(text);
     } finally {
       setLoading(false);
     }
